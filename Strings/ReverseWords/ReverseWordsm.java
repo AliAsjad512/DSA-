@@ -1,12 +1,11 @@
-package String;
+package Strings.ReverseWords;
 
-/**
- * ReverseWords
- */
-public class ReverseWords {
+public class ReverseWordsm {
 
-    public static void main(String[] args){
-        String sentence = "How are you";
+      public static void main(String[] args) {
+        
+      
+    String sentence = "How are you";
         StringBuilder word = new StringBuilder();
 
         // Use a dynamic array to store words
@@ -45,4 +44,6 @@ public class ReverseWords {
         // Print the reversed sentence
         System.out.println("Reversed Sentence: " + reversedSentence.toString());
     }
+    
 }
+

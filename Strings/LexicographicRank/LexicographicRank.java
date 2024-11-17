@@ -1,9 +1,14 @@
 package Strings.LexicographicRank;
-
+import java.util.Arrays;
 public record LexicographicRank() {
+    
     void permute(char[] chars, int idx) {
+        String s;
+        
         if (idx == chars.length) {
-            System.out.println(new String(chars));
+            s=new String(chars);
+            System.out.println(s);
+            
             return;
         }
         
@@ -25,7 +30,9 @@ public record LexicographicRank() {
     public static void main(String[] args) {
         LexicographicRank b = new LexicographicRank();
         String s = "bac";
-        b.permute(s.toCharArray(), 0); // Pass the array directly
+        char[] chars = s.toCharArray();
+        Arrays.sort(chars);
+        b.permute(chars, 0); // Pass the array directly
         
     }
 }

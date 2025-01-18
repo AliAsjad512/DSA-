@@ -1,0 +1,9 @@
+// If we have to search a block of code in given input 
+//we can do throught nested loop 
+// for example we have given string S = abceabcdabceabcd
+// we have to find P = abcd in S
+// We can apply nested loop 
+//but make sure whoever loop will be inside the outer 
+// will compare character like if i+j== j value we foound our character if any character 
+// does not match with any Character of P inner loop will break 
+// after that we will check whetther our loop 

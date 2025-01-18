@@ -60,3 +60,30 @@ public class BinaryString {
 }
     
 }
+
+
+
+
+
+
+
+
+// class Solution
+// {
+//     //Function to count the number of substrings that start and end with 1.
+//     public static int binarySubstring(int a, String str)
+//     {
+//         // Your code here
+//         int countOne = 0;
+//         int count = 0;
+        
+//         for(char c: str.toCharArray()) {
+//             if(c == '1') {
+//                 countOne++;
+//                 count += (countOne - 1);
+//             }
+//         }
+        
+//         return count;
+//     }
+// }

@@ -13,8 +13,8 @@ class Main {
         }
         
         // Shift elements to the right of the index to make space for the new element
-        for (int i = sizeOfArray - 2; i >= index; i--) {
-            copy[i + 1] = copy[i];
+        for (int i = sizeOfArray - 1; i > index; i--) {
+            copy[i] = copy[i-1];
         }
         
         // Insert the new element at the specified index

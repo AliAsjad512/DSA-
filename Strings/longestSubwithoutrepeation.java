@@ -12,3 +12,14 @@ public class longestSubwithoutrepeation {
     }
     
 }
+
+public static boolean allUnique(String s, int start, int end){
+    for(int i=start; i<=end ;i++){
+        for(int j=i+1; j<=end;j++){
+            if(s.charAt(i) == s.charAt(j)){
+                return false;
+            }
+        }
+    }
+    return true;
+}

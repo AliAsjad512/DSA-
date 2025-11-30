@@ -8,3 +8,8 @@ for x in nums:
     squares=[x**2 for x in num]
     print(squares)
 
+    #Even Squares
+
+    even_squares=[x**2 for x in num if x%2==0]
+    print(even_squares)
+

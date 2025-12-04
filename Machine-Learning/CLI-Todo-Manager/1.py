@@ -25,14 +25,3 @@ for i, title in enumerate(done_titles, 1):
 priority_rank = {"high": 1, "medium": 2, "low": 3}
 
 # make a list of all tasks
-task_list = list(tasks.values())
-
-# sort tasks by priority
-sorted_tasks = sorted(
-    task_list,
-    key=lambda t: priority_rank[t["priority"].lower()]
-)
-
-print("\nTasks sorted by highest priority:")
-for t in sorted_tasks:
-    print(f"{t['priority']} - {t['title']}")

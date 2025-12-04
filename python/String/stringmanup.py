@@ -8,3 +8,5 @@ print(city)
 pet=input("What's your pet's name? \n")
 print(pet)
 print("Your band name could be " + city + " " + pet)
+
+print(123+345)

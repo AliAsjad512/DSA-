@@ -8,4 +8,6 @@ pro_dictionary = {
     }
 }
 
-pro_dictionary["specs"]["ram"]
+#print(pro_dictionary["specs"]["ram"])
+for key in pro_dictionary:
+    print(key, ":", pro_dictionary[key])

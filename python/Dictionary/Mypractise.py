@@ -76,4 +76,13 @@ for skill in response['data']['users']:
     for language in value:
       print(language)
 
+      grades = {
+    "Ali": {"Math": 85, "CS": 90},
+    "Sara": {"Math": 78, "CS": 95}
+}
+
+for student, subjects in grades.items():
+    print(student, subjects["CS"])
+
+
 

@@ -16,3 +16,8 @@ students = [
     {"name": "Sara", "age": 24}
 ]
 print(students[1]["age"])
+
+
+employee = {"emp1": {"name": "Ali", "role": "Dev"}}
+employee["emp1"]["salary"] = 70000
+print(employee)

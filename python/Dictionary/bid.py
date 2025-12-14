@@ -39,3 +39,15 @@ employee = {
     "emp1": {"name": "Ali", "role": "Dev"},
     "emp2": {"name": "Sara", "role": "QA"}
 }
+
+
+grades = {
+    "Ali": {"Math": 85, "CS": 90},
+    "Sara": {"Math": 78, "CS": 95}
+}
+for student, subjects in grades.items():
+    print(student, subjects["Math"],subjects["CS"])
+
+
+
+    

@@ -8,7 +8,8 @@ company = {
         {"name": "Sara", "role": "QA"}
     ]
 }
-
+print(company["employees"])
 #print(company["employees"][1]["name"]["role"])
-for employee in company["employees"]:
-    print(f"Employee Name: {employee['name']}, Role: {employee['role']}")
+# for employee in company["employees"]:
+#     if employee['role']=='Dev':
+#      print(employee['name'],employee['role'])

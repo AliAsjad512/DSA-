@@ -52,3 +52,28 @@ for skill in response['data']['users']['skills']:
 #  print(student)
 
 
+response = {
+    "status": 200,
+    "data": {
+        "users": [
+            {
+                "id": 1,
+                "name": "Ali",
+                "skills": ["Python", "AWS"]
+            },
+            {
+                "id": 2,
+                "name": "Sara",
+                "skills": ["Java", "SQL"]
+            }
+        ]
+    }
+}
+
+for skill in response['data']['users']:
+ for key,value in skill.items():
+  if(key=='skills'):
+    for language in value:
+      print(language)
+
+

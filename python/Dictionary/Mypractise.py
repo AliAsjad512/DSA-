@@ -86,3 +86,12 @@ for student, subjects in grades.items():
 
 
 
+company = {
+    "HR": ["Ali", "Sara"],
+    "IT": ["John", "Emma"]
+}
+
+for dept, employees in company.items():
+    print("Department:", dept)
+    for emp in employees:
+        print(emp)

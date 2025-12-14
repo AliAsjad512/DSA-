@@ -34,3 +34,8 @@ company = {
     ]
 }
 print(company["employees"][1]["skills"][0])
+
+employee = {
+    "emp1": {"name": "Ali", "role": "Dev"},
+    "emp2": {"name": "Sara", "role": "QA"}
+}

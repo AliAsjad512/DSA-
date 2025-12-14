@@ -9,7 +9,19 @@ company = {
     ]
 }
 print(company["employees"])
-#print(company["employees"][1]["name"]["role"])
-# for employee in company["employees"]:
-#     if employee['role']=='Dev':
-#      print(employee['name'],employee['role'])
+print(company["employees"][1]["name"]["role"])
+for employee in company["employees"]:
+    if employee['role']=='Dev':
+     print(employee['name'],employee['role'])
+
+
+     data = {
+    "users": [
+        {
+            "id": 1,
+            "skills": ["Python", "AWS"]
+        }
+    ]
+}
+
+print(data["users"][0]["id"][0])

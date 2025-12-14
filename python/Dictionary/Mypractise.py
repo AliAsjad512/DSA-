@@ -9,3 +9,10 @@ student = {
 }
 
 print(student["subjects"][1])
+
+
+students = [
+    {"name": "Ali", "age": 25},
+    {"name": "Sara", "age": 24}
+]
+print(students[1]["age"])

@@ -1,0 +1,27 @@
+import numpy as np
+
+# 1. Create a 1D array
+arr = np.array([1, 2, 3, 4, 5])
+print("Original array:", arr)
+
+# 2. Perform basic operations
+print("Array + 5:", arr + 5)
+print("Array * 2:", arr * 2)
+
+# 3. Create a 2D array (matrix)
+matrix = np.array([[1, 2, 3],
+                   [4, 5, 6],
+                   [7, 8, 9]])
+print("\n2D Matrix:\n", matrix)
+
+# 4. Access elements
+print("Element at row 1, column 2:", matrix[1, 2])
+
+# 5. Slicing
+print("First two rows:\n", matrix[:2])
+print("Last column:", matrix[:, -1])
+
+# 6. Mathematical operations
+print("Sum of all elements:", np.sum(matrix))
+print("Mean of all elements:", np.mean(matrix))
+print("Transpose of matrix:\n", np.transpose(matrix))

@@ -35,3 +35,14 @@ print("Original array:", arr)
 # Find numbers divisible by 7
 div_by_7 = arr[arr % 7 == 0]
 print("Numbers divisible by 7:", div_by_7)
+
+import numpy as np
+
+# Create 3x3 matrix
+matrix = np.array([[1, 2, 3],
+                   [4, 5, 6],
+                   [7, 8, 9]])
+
+# Calculate determinant
+det = np.linalg.det(matrix)
+print("Determinant:", det)

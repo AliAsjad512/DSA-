@@ -29,3 +29,7 @@ print(arr.shape)  # ✅ (3,)
 arr = np.array([1,2,3,4,5,6])
 arr=arr[arr%2==0] ** 2
 print(arr)  # ✅ [ 4 16 36]
+
+
+arr = np.array([10,20,30])
+normalized = (arr - arr.mean()) / arr.std()

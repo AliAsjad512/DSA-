@@ -25,3 +25,13 @@ print("Last column:", matrix[:, -1])
 print("Sum of all elements:", np.sum(matrix))
 print("Mean of all elements:", np.mean(matrix))
 print("Transpose of matrix:\n", np.transpose(matrix))
+
+import numpy as np
+
+# Create the array
+arr = np.arange(10, 51)
+print("Original array:", arr)
+
+# Find numbers divisible by 7
+div_by_7 = arr[arr % 7 == 0]
+print("Numbers divisible by 7:", div_by_7)

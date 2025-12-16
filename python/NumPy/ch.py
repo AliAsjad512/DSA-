@@ -46,3 +46,15 @@ matrix = np.array([[1, 2, 3],
 # Calculate determinant
 det = np.linalg.det(matrix)
 print("Determinant:", det)
+
+
+import numpy as np
+
+# Generate 5x5 random matrix
+matrix = np.random.rand(5, 5)
+print("Random Matrix:\n", matrix)
+
+# Row-wise sum
+row_sum = np.sum(matrix, axis=1)
+print("Row-wise sum:", row_sum)
+

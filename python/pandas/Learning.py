@@ -12,3 +12,5 @@ revenue = [171.76, 128.29, 68.4, 4.04]
 #creating a Series from lists
 telecom = pd.Series(revenue, index=operators)
 telecom
+
+telecom['Verizon']

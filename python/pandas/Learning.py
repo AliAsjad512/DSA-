@@ -14,3 +14,5 @@ telecom = pd.Series(revenue, index=operators)
 telecom
 
 telecom['Verizon']
+
+telecom[[0,2,3]]

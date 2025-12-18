@@ -32,3 +32,7 @@ def profit(s):
     return s + s*0.10 # increase of 10%
 
 data['price'].apply(profit)
+
+
+# converting the date column to datetime format
+data['date']  = pd.to_datetime(data['date'],dayfirst=True)

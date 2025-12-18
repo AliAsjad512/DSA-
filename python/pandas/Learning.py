@@ -30,3 +30,5 @@ print(store_data[['location','type','total_bill']])
 
 def profit(s):
     return s + s*0.10 # increase of 10%
+
+data['price'].apply(profit)

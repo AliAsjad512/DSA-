@@ -1,11 +1,11 @@
-df.head()
-df.tail()
-df.info()
-df.describe()
-df.shape
-df.columns
-df.dtypes
-
+# df.head()
+# df.tail()
+# df.info()
+# df.describe()
+# df.shape
+# df.columns
+# df.dtypes
+import pandas as pd
 operators = ['AT&T', 'Verizon', 'T-Mobile US', 'US Cellular']
 revenue = [171.76, 128.29, 68.4, 4.04]
 
@@ -23,4 +23,10 @@ store_data = pd.DataFrame({'CustomerID': ['CustID00','CustID01','CustID02','Cust
                            ,'gender': ['M','M','F','M','F']
                            ,'type': ['Electronics','Food&Beverages','Food&Beverages','Medicine','Beauty']
                            ,'quantity':[1,3,4,2,1],'total_bill':[100,75,125,50,80]})
-store_data
+
+print(store_data['location'])
+print(store_data[['location','type','total_bill']])
+
+
+def profit(s):
+    return s + s*0.10 # increase of 10%

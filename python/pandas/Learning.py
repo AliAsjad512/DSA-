@@ -36,3 +36,6 @@ data['price'].apply(profit)
 
 # converting the date column to datetime format
 data['date']  = pd.to_datetime(data['date'],dayfirst=True)
+text = "Python"
+reversed_text = text[::-1]
+print(reversed_text)

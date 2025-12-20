@@ -48,3 +48,8 @@ if num % 2 == 0:
 else:
     print("Odd")
 
+numbers = [10, 45, 23, 89, 2]
+
+largest = max(numbers)
+print(largest)
+

@@ -53,3 +53,14 @@ numbers = [10, 45, 23, 89, 2]
 largest = max(numbers)
 print(largest)
 
+text = "hello world"
+vowels = "aeiou"
+count = 0
+
+for char in text:
+    if char.lower() in vowels:
+        count += 1
+
+print(count)
+
+

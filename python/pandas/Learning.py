@@ -39,3 +39,12 @@ data['date']  = pd.to_datetime(data['date'],dayfirst=True)
 text = "Python"
 reversed_text = text[::-1]
 print(reversed_text)
+
+
+num = 7
+
+if num % 2 == 0:
+    print("Even")
+else:
+    print("Odd")
+

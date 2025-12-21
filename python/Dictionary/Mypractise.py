@@ -99,3 +99,20 @@ for dept, employees in company.items():
         d = {'person': 2, 'cat': 4, 'spider': 8}
 for animal, legs in d.items():
  print('A {} has {} legs'.format(animal, legs))
+
+ # Initialize an empty dictionary
+user_data = {}
+
+# Ask the user how many entries they want to add
+num_entries = int(input("Enter the number of entries: "))
+
+# Loop 'num_entries' times to get key-value pairs
+for _ in range(num_entries):
+    key = input("Enter a key: ")
+    # Input is always a string; use int() or float() if you need other types
+    value = input("Enter the value for the key: ")
+    user_data[key] = value # Assign the value to the key
+
+# Print the resulting dictionary
+print(user_data)
+

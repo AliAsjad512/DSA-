@@ -116,3 +116,37 @@ for _ in range(num_entries):
 # Print the resulting dictionary
 print(user_data)
 
+# Initialize an empty dictionary
+user_data = {}
+
+# Ask the user how many students
+num_students = int(input("Enter the number of students: "))
+
+# Loop to collect data for each student
+for i in range(num_students):
+    print(f"\n--- Student {i+1} ---")
+
+    student_id = int(input("Enter student ID: "))
+    student_name = input("Enter student name: ")
+
+    # Ask how many subjects this student has
+    num_subjects = int(input("Enter total number of subjects: "))
+
+    # Create an empty list to hold grades
+    subjects_list = {}
+
+    # Collect that many grades
+    for j in range(num_subjects):
+        subject_name = input("Enter name of subject {j+1}")
+        grade = int(input(f"Enter grade for  {subject_name}: "))
+        subjects_list[subject_name] = grade
+
+    # Store data in the main dictionary
+    user_data[student_id] = {
+        "name": student_name,
+        "subjects": subjects_list
+    }
+
+# Print the resulting dictionary
+print("\nStudent Data Dictionary:")
+print(user_data)

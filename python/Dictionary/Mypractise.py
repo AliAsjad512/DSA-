@@ -64,3 +64,13 @@ for student_id, value in user_data.items():
 print("\n--- Student Grades ---")
 for name, result in student_dict.items():
     print(name, "->", result)
+
+    for key, value in user_data.items():
+  highGrade=value['average']
+  if highGrade > topper:
+    topper=highGrade
+    toppperName=value['name']
+
+print("\n--- Topper Student---")
+print("Student who got highest grade in class ", topper,toppperName)
+

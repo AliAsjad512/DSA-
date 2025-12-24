@@ -80,3 +80,17 @@ StdId=int(input('Enter student id'))
 for k, val in user_data.items():
   if k==StdId:
     print(val)
+
+    print("\n Delete Student from dictinoy by name")
+Stdname=input('Enter Student name').strip()
+for k, val in list(user_data.items()):
+    if Stdname == val['name']:
+        del user_data[k]
+        print(f"{Stdname} has been deleted.")
+        break
+else:
+    print("This student does not exist in the dictionary.")
+
+   
+
+print(user_data) 

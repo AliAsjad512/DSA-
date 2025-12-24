@@ -74,3 +74,9 @@ for name, result in student_dict.items():
 print("\n--- Topper Student---")
 print("Student who got highest grade in class ", topper,toppperName)
 
+print("\n Search Student by their Id ")
+StdId=int(input('Enter student id'))
+
+for k, val in user_data.items():
+  if k==StdId:
+    print(val)

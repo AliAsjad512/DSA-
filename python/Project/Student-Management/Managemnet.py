@@ -70,3 +70,14 @@ def Search_id():
             print(val)
             return
     print("Student ID not found.")
+
+    def Remove_Student():
+    Stdname = input("Enter Student name: ").strip()
+    for k, val in list(user_data.items()):
+        if Stdname == val['name']:
+            del user_data[k]
+            print(f"{Stdname} has been deleted.")
+            break
+    else:
+        print("This student does not exist in the dictionary.")
+

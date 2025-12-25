@@ -59,3 +59,14 @@ def Find_topper():
 
     print("\n--- Topper Student ---")
     print(f"{topperName} got the highest average: {topper}")
+
+    def All_Student_Data():
+    print(user_data)
+
+def Search_id():
+    StdId = int(input("Enter student ID: "))
+    for k, val in user_data.items():
+        if k == StdId:
+            print(val)
+            return
+    print("Student ID not found.")

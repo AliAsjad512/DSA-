@@ -41,3 +41,21 @@ def Add_Student():
     print("\n--- All Student Reports ---")
     for name, result in student_dict.items():
         print(name, "->", result)
+
+
+        
+def Find_topper():
+    if not user_data:
+        print("No students available.")
+        return
+
+    topper = -1
+    topperName = ""
+
+    for value in user_data.values():
+        if value['average'] > topper:
+            topper = value['average']
+            topperName = value['name']
+
+    print("\n--- Topper Student ---")
+    print(f"{topperName} got the highest average: {topper}")

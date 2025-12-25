@@ -24,3 +24,20 @@ def Add_Student():
             "total": total,
             "average": average
         }
+
+        def Students_report():
+    student_dict.clear()
+    for key, value in user_data.items():
+        AvgGrade = value['average']
+        if 90 <= AvgGrade <= 100:
+            student_dict[value['name']] = f"Student with id {key} got Grade A"
+        elif 80 <= AvgGrade < 90:
+            student_dict[value['name']] = f"Student with id {key} got Grade B"
+        elif 70 <= AvgGrade < 80:
+            student_dict[value['name']] = f"Student with id {key} got Grade C"
+        else:
+            student_dict[value['name']] = f"Student with id {key} Failed"
+
+    print("\n--- All Student Reports ---")
+    for name, result in student_dict.items():
+        print(name, "->", result)

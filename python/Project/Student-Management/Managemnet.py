@@ -81,3 +81,32 @@ def Search_id():
     else:
         print("This student does not exist in the dictionary.")
 
+while True:
+    print("\n==== Student Management System ====")
+    print("1. Add Students")
+    print("2. All Students Report")
+    print("3. Find Topper")
+    print("4. Search Student by ID")
+    print("5. Remove Student")
+    print("6. Show Raw Student Data")
+    print("0. Exit")
+
+    SelOp = input("Enter your choice: ")
+
+    if SelOp == "1":
+        Add_Student()
+    elif SelOp == "2":
+        Students_report()
+    elif SelOp == "3":
+        Find_topper()
+    elif SelOp == "4":
+        Search_id()
+    elif SelOp == "5":
+        Remove_Student()
+    elif SelOp == "6":
+        All_Student_Data()
+    elif SelOp == "0":
+        print("Exiting program.")
+        break
+    else:
+        print("Invalid choice. Try again.")

@@ -12,3 +12,8 @@ print(car_data)
 
 car_sales=pd.read_csv("car-sales.csv")
 print(car_sales)
+print(car_sales.dtypes)
+print(car_sales.columns)
+car_sales.index
+car_sales.describe()
+car_sales.info()

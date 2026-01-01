@@ -10,4 +10,7 @@ data = {
 }
 
 df = pd.DataFrame(data)
+print('Math score mean',df['Math'].mean())
+print('Science score mean',df['Science'].mean())
+print('English score mean',df['English'].mean())
 print(df)

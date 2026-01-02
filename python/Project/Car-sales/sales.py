@@ -42,3 +42,21 @@ white_toyotas = car_sales[(car_sales["Make"] == "Toyota") & (car_sales["Colour"]
 
 white_toyotas_mean = white_toyotas.mean(numeric_only=True)
 print(white_toyotas_mean)
+
+## Manipultaing data 
+car_sales["Make"].str.lower()
+car_sales["Make"] = car_sales["Make"].str.lower()
+seats_column = pd.Series([5, 5, 5, 5, 5,])
+car_sales["Seats"] = seats_column
+seats_column = pd.Series([5, 5, 5, 5, 5,])
+car_sales["Seats"] = seats_column
+car_sales["Seats"].fillna(5, inplace=True)
+car_sales
+car_sales
+
+
+fuel_economy = [7.5, 9.2, 5.0, 9.6, 8.7,4.7,7.6,8.7,3.0,7.6]
+car_sales["Fuel per 100KM"] = fuel_economy
+car_sales
+
+car_sales.sample(frac=1)

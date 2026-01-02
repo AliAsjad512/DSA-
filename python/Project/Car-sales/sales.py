@@ -31,3 +31,5 @@ print(car_sales['Price'].mean())
 print(car_sales["Price"].max())
 print(car_sales["Price"].min())
 car_sales[car_sales["Make"] == "Toyota"]["Price"].max()
+
+pd.crosstab(car_sales["Make"], car_sales["Doors"])

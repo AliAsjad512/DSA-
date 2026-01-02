@@ -37,3 +37,8 @@ pd.crosstab(car_sales["Make"], car_sales["Doors"])
 grouped = car_sales.groupby("Make").mean(numeric_only=True)
 bmw_data = grouped.loc["BMW"]
 print(bmw_data)
+
+white_toyotas = car_sales[(car_sales["Make"] == "Toyota") & (car_sales["Colour"] == "White")]
+
+white_toyotas_mean = white_toyotas.mean(numeric_only=True)
+print(white_toyotas_mean)

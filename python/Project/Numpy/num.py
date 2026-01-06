@@ -15,3 +15,23 @@ a3 = np.array([[[1 , 2, 3],
 a2.size
 a2.shape,a3.shape, 
 a2.ndim, a3.ndim 
+
+import pandas as pd
+df = pd.DataFrame(a2)
+df
+
+sample_array = np.array([1,2,3])
+sample_array
+
+range_array = np.arange(0,10,2)
+range_array
+
+random_array = np.random.randint(0, 10, size=(3, 5))
+random_array
+
+np.random.random((5,3))
+
+random_array_2=np.random.random((5,3))
+random_array_2
+random_array_3 = np.random.rand(5, 3)
+random_array_3

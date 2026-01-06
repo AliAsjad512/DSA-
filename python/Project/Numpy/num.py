@@ -12,3 +12,6 @@ a3 = np.array([[[1 , 2, 3],
                  [13,14,15],
                   [ 16, 17, 18]]
                ])
+a2.size
+a2.shape,a3.shape, 
+a2.ndim, a3.ndim 

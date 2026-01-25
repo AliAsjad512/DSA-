@@ -39,3 +39,18 @@ def length_of_linked_list(head):
         count += 1
         current = current.next
     return count
+
+
+def search_in_linked_list(head, target):
+    """
+    Search for a target value in the linked list.
+    Returns True if found, False otherwise.
+    Time Complexity: O(n)
+    Space Complexity: O(1)
+    """
+    current = head
+    while current:
+        if current.data == target:
+            return True
+        current = current.next
+    return False

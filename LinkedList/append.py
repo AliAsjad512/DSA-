@@ -54,3 +54,16 @@ def search_in_linked_list(head, target):
             return True
         current = current.next
     return False
+
+def delete_head(head):
+    """
+    Delete the head node of the linked list.
+    Returns the new head of the list.
+    Time Complexity: O(1)
+    Space Complexity: O(1)
+    """
+    if not head:
+        return None
+    new_head = head.next
+    # Optional: Free memory of old head (not necessary in Python)
+    return new_head

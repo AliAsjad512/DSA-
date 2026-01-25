@@ -67,3 +67,32 @@ def delete_head(head):
     new_head = head.next
     # Optional: Free memory of old head (not necessary in Python)
     return new_head
+
+
+def delete_at_position(head, position):
+    """
+    Delete node at given position (0-indexed).
+    Returns the head of the modified list.
+    Time Complexity: O(n)
+    Space Complexity: O(1)
+    """
+    if not head:
+        return None
+    
+    # If deleting the head
+    if position == 0:
+        return head.next
+    
+    current = head
+    prev = None
+    count = 0
+
+    while current and count < position:
+        prev = current
+        current = current.next
+        count += 1
+    
+    # If position is valid and node exists
+    if current:
+        prev.next = current.next
+    return head

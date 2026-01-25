@@ -24,3 +24,18 @@ class LinkedList:
             print(current.data, end=" -> ")
             current = current.next
         print("None")
+
+
+        # ========== 1. Length of Linked List ==========
+def length_of_linked_list(head):
+    """
+    Returns the length (number of nodes) of the linked list.
+    Time Complexity: O(n)
+    Space Complexity: O(1)
+    """
+    count = 0
+    current = head
+    while current:
+        count += 1
+        current = current.next
+    return count

@@ -164,3 +164,49 @@ def are_identical_lists(head1, head2):
     # If both lists are exhausted, they're identical
     # If one still has nodes, they're not identical
     return current1 == None and current2 == None
+def test_all_functions():
+    print("Testing Linked List Functions")
+    print("=" * 50)
+    
+    # Create test linked lists
+    list1 = LinkedList()
+    for value in [1, 2, 3, 4, 5]:
+        list1.append(value)
+    
+    list2 = LinkedList()
+    for value in [1, 2, 2, 3, 4, 4, 4, 5]:
+        list2.append(value)
+    
+    list3 = LinkedList()
+    for value in [1, 2, 3, 4, 5]:
+        list3.append(value)
+    
+    list_sorted_asc = LinkedList()
+    for value in [1, 2, 3, 4, 5]:
+        list_sorted_asc.append(value)
+    
+    list_sorted_desc = LinkedList()
+    for value in [5, 4, 3, 2, 1]:
+        list_sorted_desc.append(value)
+    
+    list_unsorted = LinkedList()
+    for value in [1, 3, 2, 5, 4]:
+        list_unsorted.append(value)
+    
+    # Test 1: Length of Linked List
+    print("1. Length of Linked List:")
+    print(f"   List1: {length_of_linked_list(list1.head)}")
+    print(f"   List2: {length_of_linked_list(list2.head)}")
+    print(f"   Empty list: {length_of_linked_list(None)}")
+    print()
+    
+    # Test 2: Search In Linked List
+    print("2. Search In Linked List:")
+    print(f"   Search 3 in List1: {search_in_linked_list(list1.head, 3)}")
+    print(f"   Search 10 in List1: {search_in_linked_list(list1.head, 10)}")
+    print()
+    
+    # Test 3: Delete Head of Linked List
+    print("3. Delete Head of Linked List:")
+    print("   Original List1:", end=" ")
+    list1.print_list()

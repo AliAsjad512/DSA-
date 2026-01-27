@@ -96,3 +96,28 @@ def delete_at_position(head, position):
     if current:
         prev.next = current.next
     return head
+
+
+
+def is_linked_list_sorted(head, ascending=True):
+    """
+    Check if the linked list is sorted.
+    ascending=True checks for ascending order, False for descending.
+    Returns True if sorted, False otherwise.
+    Time Complexity: O(n)
+    Space Complexity: O(1)
+    """
+    if not head or not head.next:
+        return True
+    
+    current = head
+    while current.next:
+        if ascending:
+            if current.data > current.next.data:
+                return False
+        else:
+            if current.data < current.next.data:
+                return False
+        current = current.next
+    
+    return True

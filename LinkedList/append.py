@@ -120,4 +120,26 @@ def is_linked_list_sorted(head, ascending=True):
                 return False
         current = current.next
     
-    return True
+    return 
+
+def remove_duplicates_sorted(head):
+    """
+    Remove duplicates from a sorted linked list.
+    Returns the head of the modified list.
+    Time Complexity: O(n)
+    Space Complexity: O(1)
+    """
+    if not head or not head.next:
+        return head
+    
+    current = head
+    while current and current.next:
+        # If current node's value equals next node's value
+        if current.data == current.next.data:
+            # Skip the next node
+            current.next = current.next.next
+        else:
+            # Move to next node
+            current = current.next
+    
+    return head

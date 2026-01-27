@@ -143,3 +143,24 @@ def remove_duplicates_sorted(head):
             current = current.next
     
     return head
+
+
+def are_identical_lists(head1, head2):
+    """
+    Check if two linked lists are identical.
+    Returns True if identical, False otherwise.
+    Time Complexity: O(min(n, m))
+    Space Complexity: O(1)
+    """
+    current1 = head1
+    current2 = head2
+    
+    while current1 and current2:
+        if current1.data != current2.data:
+            return False
+        current1 = current1.next
+        current2 = current2.next
+    
+    # If both lists are exhausted, they're identical
+    # If one still has nodes, they're not identical
+    return current1 == None and current2 == None

@@ -48,4 +48,41 @@ class LinkedList:
     
     # Insert at the end
     current.next = new_node
+    # return head()
+
+
+
+def insert_in_middle(head, data):
+    """
+    Insert a node in the middle of the linked list.
+    If length is even, insert after the first middle.
+    Returns the head of the modified list.
+    Time Complexity: O(n)
+    Space Complexity: O(1)
+    """
+    new_node = Node(data)
+    
+    # If list is empty
+    if not head:
+        return new_node
+    
+    # Find the length
+    length = 0
+    current = head
+    while current:
+        length += 1
+        current = current.next
+    
+    # Find middle position
+    middle_pos = length // 2
+    
+    # Traverse to the node before middle position
+    current = head
+    for _ in range(middle_pos - 1):
+        current = current.next
+    
+    # Insert after current node
+    new_node.next = current.next
+    current.next = new_node
+    
     return head

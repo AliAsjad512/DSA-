@@ -240,3 +240,19 @@ def test_all_functions():
     print(f"   Descending sorted list (descending check): {is_linked_list_sorted(list_sorted_desc.head, ascending=False)}")
     print(f"   Unsorted list (ascending check): {is_linked_list_sorted(list_unsorted.head, ascending=True)}")
     print()
+
+    print("6. Remove Duplicates from Sorted List:")
+    print("   Original List2 (with duplicates):", end=" ")
+    list2.print_list()
+    
+    list2.head = remove_duplicates_sorted(list2.head)
+    print("   After removing duplicates:", end=" ")
+    list2.print_list()
+    print()
+    
+    # Test 7: Identical Linked Lists
+    print("7. Identical Linked Lists:")
+    # Reset list1 for testing
+    list1 = LinkedList()
+    for value in [1, 2, 3, 4, 5]:
+        list1.append(value)

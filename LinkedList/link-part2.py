@@ -27,3 +27,25 @@ class LinkedList:
             print(current.data, end=" -> ")
             current = current.next
         print("None")
+
+        def insert_at_end(head, data):
+    """
+    Insert a node at the end of the linked list.
+    Returns the head of the modified list.
+    Time Complexity: O(n)
+    Space Complexity: O(1)
+    """
+    new_node = Node(data)
+    
+    # If list is empty
+    if not head:
+        return new_node
+    
+    # Traverse to the last node
+    current = head
+    while current.next:
+        current = current.next
+    
+    # Insert at the end
+    current.next = new_node
+    return head

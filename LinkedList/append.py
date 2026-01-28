@@ -217,3 +217,19 @@ def test_all_functions():
     print("   After deleting head:", end=" ")
     temp_list.print_list()
     print()
+
+    print("4. Linked List Delete at Position:")
+    # Reset list1 for testing
+    list1 = LinkedList()
+    for value in [1, 2, 3, 4, 5]:
+        list1.append(value)
+    
+    print("   Original list:", end=" ")
+    list1.print_list()
+    
+    # Delete at position 2 (0-indexed, so 3rd element)
+    list1.head = delete_at_position(list1.head, 2)
+    print("   After deleting at position 2:", end=" ")
+    list1.print_list()
+    print()
+    

@@ -233,3 +233,10 @@ def test_all_functions():
     list1.print_list()
     print()
     
+     print("5. Is Linked List Sorted:")
+    print(f"   Ascending sorted list (ascending check): {is_linked_list_sorted(list_sorted_asc.head, ascending=True)}")
+    print(f"   Ascending sorted list (descending check): {is_linked_list_sorted(list_sorted_asc.head, ascending=False)}")
+    print(f"   Descending sorted list (ascending check): {is_linked_list_sorted(list_sorted_desc.head, ascending=True)}")
+    print(f"   Descending sorted list (descending check): {is_linked_list_sorted(list_sorted_desc.head, ascending=False)}")
+    print(f"   Unsorted list (ascending check): {is_linked_list_sorted(list_unsorted.head, ascending=True)}")
+    print()

@@ -256,3 +256,10 @@ def test_all_functions():
     list1 = LinkedList()
     for value in [1, 2, 3, 4, 5]:
         list1.append(value)
+        print(f"   List1 and List3 are identical: {are_identical_lists(list1.head, list3.head)}")
+    print(f"   List1 and List2 are identical: {are_identical_lists(list1.head, list2.head)}")
+    print(f"   List1 and empty list are identical: {are_identical_lists(list1.head, None)}")
+
+
+if __name__ == "__main__":
+    test_all_functions()

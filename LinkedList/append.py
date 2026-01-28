@@ -210,3 +210,10 @@ def test_all_functions():
     print("3. Delete Head of Linked List:")
     print("   Original List1:", end=" ")
     list1.print_list()
+    
+    new_head = delete_head(list1.head)
+    temp_list = LinkedList()
+    temp_list.head = new_head
+    print("   After deleting head:", end=" ")
+    temp_list.print_list()
+    print()

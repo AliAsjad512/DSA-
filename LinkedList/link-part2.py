@@ -146,9 +146,16 @@ def insert_in_sorted_list(head, data):
 
 # ========== 5. Delete Tail of Linked List ==========
 def delete_tail(head):
-    """
-    Delete the last node (tail) of the linked list.
-    Returns the head of the modified list.
-    Time Complexity: O(n)
-    Space Complexity: O(1)
-    "
+    
+ if not head or not head.next:
+        return None
+    
+    # Traverse to the second last node
+    current = head
+    while current.next and current.next.next:
+        current = current.next
+    
+    # Remove the last node
+    current.next = None
+    
+    return head

@@ -203,3 +203,67 @@ def reverse_linked_list(head):
     
     # prev is the new head
     return prev
+
+def advanced_testing():
+    print("\nAdvanced Testing Scenarios")
+    print("=" * 60)
+    
+    # Test edge cases for each function
+    
+    print("1. Edge Cases - Empty List Operations:")
+    empty_head = None
+    
+    # Insert at end of empty list
+    empty_head = insert_at_end(empty_head, 100)
+    temp = LinkedList()
+    temp.head = empty_head
+    print("   Insert 100 at end of empty list:", end=" ")
+    temp.print_list()
+    
+    # Insert in middle of single element list
+    single_list = LinkedList()
+    single_list.append(50)
+    single_list.head = insert_in_middle(single_list.head, 25)
+    print("   Insert 25 in middle of [50]:", end=" ")
+    single_list.print_list()
+    
+    print("\n2. Edge Cases - Boundary Positions:")
+    bound_list = LinkedList()
+    bound_list.append(1)
+    bound_list.append(2)
+    
+    # Insert at position 0 (should handle as position 1)
+    bound_list.head = insert_at_position(bound_list.head, 0, 1)
+    print("   After inserting 0 at position 1:", end=" ")
+    bound_list.print_list()
+    
+    # Insert at position beyond length
+    bound_list.head = insert_at_position(bound_list.head, 99, 10)
+    print("   After inserting 99 at position 10 (beyond length):", end=" ")
+    bound_list.print_list()
+    
+    print("\n3. Edge Cases - Single Element Lists:")
+    single = LinkedList()
+    single.append(42)
+    
+    print("   Single element list:", end=" ")
+    single.print_list()
+    
+    # Delete tail of single element list
+    single.head = delete_tail(single.head)
+    print("   After deleting tail:", end=" ")
+    single.print_list()
+    
+    # Reverse single element list
+    single.append(42)
+    single.head = reverse_linked_list(single.head)
+    print("   After reversing single element:", end=" ")
+    single.print_list()
+
+
+if __name__ == "__main__":
+    test_all_functions()
+    advanced_testing()
+    
+    print("\n" + "=" * 60)
+    print("All operations tested successfully!")

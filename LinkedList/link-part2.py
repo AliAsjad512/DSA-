@@ -159,3 +159,33 @@ def delete_tail(head):
     current.next = None
     
     return head
+def join_linked_lists(head1, head2):
+    """
+    Join two linked lists by connecting the tail of first to head of second.
+    Returns the head of the joined list.
+    Time Complexity: O(n) where n is length of first list
+    Space Complexity: O(1)
+    """
+    # If first list is empty
+    if not head1:
+        return head2
+    
+    # If second list is empty
+    if not head2:
+        return head1
+    
+    # Find the tail of first list
+    current = head1
+    while current.next:
+        current = current.next
+    
+    # Connect tail of first to head of second
+    current.next = head2
+    
+    return head1
+
+
+# ========== 7. Reverse a linked list ==========
+def reverse_linked_list(head):
+    """
+    Reverse the linked li

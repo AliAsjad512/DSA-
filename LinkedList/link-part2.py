@@ -267,3 +267,47 @@ if __name__ == "__main__":
     
     print("\n" + "=" * 60)
     print("All operations tested successfully!")
+
+
+
+    # 1. Stacks
+class Stack:
+    def __init__(self):
+        self.items = []
+    
+    def push(self, item): self.items.append(item)
+    def pop(self): return self.items.pop() if self.items else None
+    def peek(self): return self.items[-1] if self.items else None
+    def is_empty(self): return len(self.items) == 0
+
+# 2. Queues
+class Queue:
+    def __init__(self):
+        self.items = []
+    
+    def enqueue(self, item): self.items.append(item)
+    def dequeue(self): return self.items.pop(0) if self.items else None
+    def front(self): return self.items[0] if self.items else None
+
+# 3. Trees
+class TreeNode:
+    def __init__(self, data):
+        self.data = data
+        self.left = None
+        self.right = None
+
+# 4. Graphs
+class Graph:
+    def __init__(self):
+        self.graph = {}
+    
+    def add_edge(self, u, v):
+        if u not in self.graph:
+            self.graph[u] = []
+        self.graph[u].append(v)
+
+# 5. Hash Tables
+class HashTable:
+    def __init__(self, size=10):
+        self.size = size
+        self.table = [[] for _ in range(size)]

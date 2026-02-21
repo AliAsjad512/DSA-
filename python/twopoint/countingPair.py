@@ -25,3 +25,5 @@ class CountingPairs:
                     right -= 1
             
             return count
+        
+         return count_pairs(upper) - count_pairs(lower - 1)

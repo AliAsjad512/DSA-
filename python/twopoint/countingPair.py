@@ -12,3 +12,16 @@ class CountingPairs:
         """
         nums.sort()
         n = len(nums)
+        def count_pairs(limit):
+            """Count pairs with sum <= limit"""
+            left, right = 0, n - 1
+            count = 0
+            
+            while left < right:
+                if nums[left] + nums[right] <= limit:
+                    count += right - left
+                    left += 1
+                else:
+                    right -= 1
+            
+            return count

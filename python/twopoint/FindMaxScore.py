@@ -25,3 +25,4 @@ def maximumScore(self, nums, k):
                 min_val = min(min_val, nums[right])
             
             max_score = max(max_score, min_val * (right - left + 1))
+            return max_score

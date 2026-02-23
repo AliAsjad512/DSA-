@@ -13,3 +13,11 @@
             # Skip non-alphanumeric characters from right
             while left < right and not s[right].isalnum():
                 right -= 1
+                   # Compare characters (case-insensitive)
+            if s[left].lower() != s[right].lower():
+                return False
+            
+            left += 1
+            right -= 1
+        
+        return True

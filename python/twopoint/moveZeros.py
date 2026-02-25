@@ -11,3 +11,5 @@
             if nums[i] != 0:
                 nums[non_zero_pos], nums[i] = nums[i], nums[non_zero_pos]
                 non_zero_pos += 1
+        # Remaining elements are already zero, no need to fill explicitly   
+        

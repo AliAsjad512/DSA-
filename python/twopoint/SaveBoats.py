@@ -4,3 +4,6 @@ def numRescueBoats(self, people, limit):
         
         Approach: Sort + two pointers (lightest + heaviest together if possible) [citation:9]
         """
+         people.sort()
+        left, right = 0, len(people) - 1
+        boats = 0

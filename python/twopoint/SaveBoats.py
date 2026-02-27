@@ -12,3 +12,4 @@ def numRescueBoats(self, people, limit):
                 left += 1  # Take lightest person
             right -= 1  # Always take heaviest person
             boats += 1
+               return boats

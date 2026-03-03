@@ -56,3 +56,4 @@ def print_colored(self, text, color='green'):
         """Initialize git repository if not already initialized"""
         if not os.path.exists(os.path.join(self.repo_path, '.git')):
             self.print_colored("Initializing git repository...", 'yellow')
+            self.run_command("git init")

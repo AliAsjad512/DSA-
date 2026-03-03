@@ -23,3 +23,16 @@ def print_colored(self, text, color='green'):
             'reset': '\033[0m'
         }
         print(f"{colors.get(color, '')}{text}{colors['reset']}")
+
+         def run_command(self, command):
+        """Run shell command and return output"""
+        try:
+            result = subprocess.run(
+                command,
+                shell=True,
+                capture_output=True,
+                text=True,
+                check=True
+            )
+            self.print_colored(f"✓ {command}", 'green')
+            return result.stdout.strip()

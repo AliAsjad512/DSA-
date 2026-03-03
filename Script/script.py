@@ -36,3 +36,23 @@ def print_colored(self, text, color='green'):
             )
             self.print_colored(f"✓ {command}", 'green')
             return result.stdout.strip()
+        except subprocess.CalledProcessError as e:
+            self.print_colored(f"✗ Error in: {command}", 'red')
+            print(f"Error details: {e.stderr}")
+            return None
+    
+    def check_git_installed(self):
+        """Check if git is installed"""
+        try:
+            subprocess.run(['git', '--version'], capture_output=True, check=True)
+            self.print_colored("✓ Git is installed", 'green')
+            return True
+        except:
+            self.print_colored("✗ Git is not installed!", 'red')
+            print("Please install Git from: https://git-scm.com/downloads")
+            return False
+    
+    def initialize_git(self):
+        """Initialize git repository if not already initialized"""
+        if not os.path.exists(os.path.join(self.repo_path, '.git')):
+            self.print_colored("Initializing git repository...", 'yellow')

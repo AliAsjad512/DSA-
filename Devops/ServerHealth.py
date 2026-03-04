@@ -83,4 +83,61 @@ class ServerHealthMonitor:
             })
         
         return alerts
+
+def generate_report(self) -> Dict[str, Any]:
+        """Generate complete health report"""
+        return {
+            'hostname': self.hostname,
+            'timestamp': datetime.datetime.now().isoformat(),
+            'cpu': self.get_cpu_usage(),
+            'memory': self.get_memory_usage(),
+            'disk': self.get_disk_usage(),
+            'network': self.get_network_stats(),
+            'alerts': self.check_alerts(),
+            'status': 'HEALTHY' if not self.check_alerts() else 'ISSUES_DETECTED'
+        }
+    
+    def save_report(self, filename: str = None):
+        """Save health report to file"""
+        if not filename:
+            filename = f"health_report_{self.hostname}_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+        
+        report = self.generate_report()
+        with open(filename, 'w') as f:
+            json.dump(report, f, indent=2)
+        
+        print(f"✅ Report saved to {filename}")
+        return filename
+    
+    @staticmethod
+    def _bytes_to_gb(bytes_value):
+        """Convert bytes to gigabytes"""
+        return round(bytes_value / (1024**3), 2)
+    
+    @staticmethod
+    def _bytes_to_mb(bytes_value):
+        """Convert bytes to megabytes"""
+        return round(bytes_value / (1024**2), 2)
+
+
+# Usage
+if __name__ == "__main__":
+    monitor = ServerHealthMonitor(threshold_cpu=70, threshold_memory=75, threshold_disk=80)
+    
+    # Generate and print report
+    report = monitor.generate_report()
+    print(f"\n📊 Health Report for {report['hostname']}")
+    print("=" * 50)
+    print(f"CPU Usage: {report['cpu']['percent']}%")
+    print(f"Memory Usage: {report['memory']['percent']}%")
+    print(f"Disk Usage: {report['disk']['percent']}%")
+    print(f"Status: {report['status']}")
+    
+    if report['alerts']:
+        print("\n⚠️  ALERTS:")
+        for alert in report['alerts']:
+            print(f"  - {alert['message']}")
+    
+    # Save report
+    monitor.save_report()
     

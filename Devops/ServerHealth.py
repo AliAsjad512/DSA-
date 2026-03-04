@@ -29,3 +29,13 @@ class ServerHealthMonitor:
             'used': self._bytes_to_gb(memory.used),
             'free': self._bytes_to_gb(memory.free)
         }
+    
+    def get_disk_usage(self) -> Dict[str, Any]:
+        """Get disk usage statistics"""
+        disk = psutil.disk_usage('/')
+        return {
+            'total': self._bytes_to_gb(disk.total),
+            'used': self._bytes_to_gb(disk.used),
+            'free': self._bytes_to_gb(disk.free),
+            'percent': disk.percent
+        }

@@ -19,3 +19,13 @@ class ServerHealthMonitor:
             'count': psutil.cpu_count(),
             'load_avg': psutil.getloadavg()
         }
+     def get_memory_usage(self) -> Dict[str, Any]:
+        """Get memory usage statistics"""
+        memory = psutil.virtual_memory()
+        return {
+            'total': self._bytes_to_gb(memory.total),
+            'available': self._bytes_to_gb(memory.available),
+            'percent': memory.percent,
+            'used': self._bytes_to_gb(memory.used),
+            'free': self._bytes_to_gb(memory.free)
+        }

@@ -39,3 +39,17 @@ class ServerHealthMonitor:
             'free': self._bytes_to_gb(disk.free),
             'percent': disk.percent
         }
+    def get_network_stats(self) -> Dict[str, Any]:
+        """Get network statistics"""
+        network = psutil.net_io_counters()
+        return {
+            'bytes_sent': self._bytes_to_mb(network.bytes_sent),
+            'bytes_recv': self._bytes_to_mb(network.bytes_recv),
+            'packets_sent': network.packets_sent,
+            'packets_recv': network.packets_recv,
+            'errin': network.errin,
+            'errout': network.errout
+        }
+    
+    
+    

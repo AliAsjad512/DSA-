@@ -73,5 +73,14 @@ class ServerHealthMonitor:
                 'message': f'Memory usage is at {memory_percent}% (threshold: {self.threshold_memory}%)',
                 'timestamp': datetime.datetime.now().isoformat()
             })
-    
+    disk_percent = psutil.disk_usage('/').percent
+        if disk_percent > self.threshold_disk:
+            alerts.append({
+                'level': 'WARNING',
+                'type': 'DISK',
+                'message': f'Disk usage is at {disk_percent}% (threshold: {self.threshold_disk}%)',
+                'timestamp': datetime.datetime.now().isoformat()
+            })
+        
+        return alerts
     

@@ -50,6 +50,28 @@ class ServerHealthMonitor:
             'errin': network.errin,
             'errout': network.errout
         }
-    
+    def check_alerts(self) -> list:
+        """Check for threshold violations"""
+        alerts = []
+        
+        # CPU Alert
+        cpu_percent = psutil.cpu_percent(interval=1)
+        if cpu_percent > self.threshold_cpu:
+            alerts.append({
+                'level': 'WARNING',
+                'type': 'CPU',
+                'message': f'CPU usage is at {cpu_percent}% (threshold: {self.threshold_cpu}%)',
+                'timestamp': datetime.datetime.now().isoformat()
+            })
+        
+        # Memory Alert
+        memory_percent = psutil.virtual_memory().percent
+        if memory_percent > self.threshold_memory:
+            alerts.append({
+                'level': 'WARNING',
+                'type': 'MEMORY',
+                'message': f'Memory usage is at {memory_percent}% (threshold: {self.threshold_memory}%)',
+                'timestamp': datetime.datetime.now().isoformat()
+            })
     
     

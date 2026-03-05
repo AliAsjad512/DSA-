@@ -48,3 +48,21 @@ class LogAnalyzer:
             self.parse_log_file(log_file)
         
         return self.get_summary()
+    
+     def _analyze_line(self, line: str, line_num: int, filename: str):
+        """Analyze a single line of log"""
+        for level, pattern in self.log_patterns.items():
+            if re.search(pattern, line):
+                self.results[level]['count'] += 1
+                self.results[level]['lines'].append({
+                    'line': line_num,
+                    'content': line,
+                    'file': filename
+                })
+                
+                # Try to extract timestamp
+                timestamp = self._extract_timestamp(line)
+                if timestamp:
+                    self.results[level]['timestamps'].append(timestamp)
+                break
+    

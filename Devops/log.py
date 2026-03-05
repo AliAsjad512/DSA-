@@ -33,3 +33,18 @@ class LogAnalyzer:
                 self._analyze_line(line.strip(), line_num, filepath)
         
         return self.get_summary()
+    
+    def parse_log_directory(self, directory: str, pattern: str = "*.log") -> Dict:
+        """Parse all log files in a directory"""
+        import glob
+        
+        log_files = glob.glob(os.path.join(directory, pattern))
+        if not log_files:
+            print(f"⚠️ No log files found matching pattern {pattern}")
+            return {}
+        
+        for log_file in log_files:
+            print(f"📄 Parsing {log_file}...")
+            self.parse_log_file(log_file)
+        
+        return self.get_summary()

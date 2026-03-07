@@ -174,3 +174,4 @@ store_data
 store_data['location']
 
 store_data['location'].value_counts()
+store_data[2:4]

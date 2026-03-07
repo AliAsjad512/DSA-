@@ -170,3 +170,7 @@ store_data = pd.DataFrame({'CustomerID': ['CustID00','CustID01','CustID02','Cust
                            ,'type': ['Electronics','Food&Beverages','Food&Beverages','Medicine','Beauty']
                            ,'quantity':[1,3,4,2,1],'total_bill':[100,75,125,50,80]})
 store_data
+
+store_data['location']
+
+store_data['location'].value_counts()

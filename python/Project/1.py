@@ -19,3 +19,19 @@ print(df.loc[0:2])   # first three students
 # graph
 df.plot(x="Student", y="Marks", kind="bar", title="Student Marks")
 plt.show()
+
+salaries = {
+    "Ali":5000,
+    "John":6000,
+    "Sara":5500,
+    "Mike":7000
+}
+
+total = 0
+
+for name in salaries:
+    total += salaries[name]
+
+average = total / len(salaries)
+
+print("Average Salary:", average)

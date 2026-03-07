@@ -175,3 +175,11 @@ store_data['location']
 
 store_data['location'].value_counts()
 store_data[2:4]
+
+sales = [
+    [10, 15, 20],
+    [12, 18, 25],
+    [14, 16, 22]
+]
+Convert_Sales = pd.DataFrame(sales, columns=["A", "B","C"],index=["Da1","Da2","Da3"])
+Convert_Sales

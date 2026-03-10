@@ -28,3 +28,19 @@ class DockerManager:
                 'created': datetime.fromtimestamp(container.attrs['Created']).strftime('%Y-%m-%d %H:%M:%S'),
                 'ports': self._format_ports(container.attrs['NetworkSettings']['Ports'])
             })
+
+            return container_list
+         def _format_ports(self, ports: Dict) -> str:
+        """Format port mappings"""
+        if not ports:
+            return 'none'
+        
+        port_strs = []
+        for container_port, mappings in ports.items():
+            if mappings:
+                for mapping in mappings:
+                    port_strs.append(f"{mapping['HostIp']}:{mapping['HostPort']}->{container_port}")
+            else:
+                port_strs.append(container_port)
+        
+        return ', '.join(port_strs)

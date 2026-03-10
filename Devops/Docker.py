@@ -14,3 +14,6 @@ class DockerManager:
         except Exception as e:
             print(f"❌ Failed to connect to Docker: {e}")
             sys.exit(1)
+            def list_containers(self, all_containers: bool = False) -> List[Dict]:
+        """List all containers"""
+        containers = self.client.containers.list(all=all_containers)

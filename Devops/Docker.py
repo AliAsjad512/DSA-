@@ -17,3 +17,14 @@ class DockerManager:
             def list_containers(self, all_containers: bool = False) -> List[Dict]:
         """List all containers"""
         containers = self.client.containers.list(all=all_containers)
+        container_list = []
+        for container in containers:
+            container_list.append({
+                'id': container.short_id,
+                'name': container.name,
+                'image': container.image.tags[0] if container.image.tags else 'none',
+                'status': container.status,
+                'state': container.attrs['State']['Status'],
+                'created': datetime.fromtimestamp(container.attrs['Created']).strftime('%Y-%m-%d %H:%M:%S'),
+                'ports': self._format_ports(container.attrs['NetworkSettings']['Ports'])
+            })

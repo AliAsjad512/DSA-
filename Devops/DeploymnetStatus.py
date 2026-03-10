@@ -72,3 +72,17 @@ class DeploymentStatus(Enum):
                 details = response.json() if response.text else {}
             else:
                 status = DeploymentStatus.FAILED
+                details = {'status_code': response.status_code}
+                
+        except requests.exceptions.Timeout:
+            status = DeploymentStatus.FAILED
+            response_time = env_config.get('timeout', 5) * 1000
+            details = {'error': 'Timeout'}
+        except requests.exceptions.ConnectionError:
+            status = DeploymentStatus.FAILED
+            response_time = 0
+            details = {'error': 'Connection Error'}
+        except Exception as e:
+            status = DeploymentStatus.FAILED
+            response_time = 0
+            details = {'error': str(e)}

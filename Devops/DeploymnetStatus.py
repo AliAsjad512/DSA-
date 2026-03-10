@@ -54,3 +54,21 @@ class DeploymentStatus(Enum):
                 "expected_version": "1.0.0",
                 "services": ["api", "web", "database"]
             }
+        def check_health(self, env_config: Dict) -> Dict:
+        """Check health of a deployment"""
+        url = env_config['url'] + env_config['health_endpoint']
+        start_time = time.time()
+        
+        try:
+            response = requests.get(
+                url,
+                timeout=env_config.get('timeout', 5),
+                headers={'User-Agent': 'Deployment-Checker/1.0'}
+            )
+            response_time = round((time.time() - start_time) * 1000, 2)
+            
+            if response.status_code == 200:
+                status = DeploymentStatus.SUCCESS
+                details = response.json() if response.text else {}
+            else:
+                status = DeploymentStatus.FAILED

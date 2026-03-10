@@ -44,3 +44,14 @@ class DockerManager:
                 port_strs.append(container_port)
         
         return ', '.join(port_strs)
+    
+     def display_containers(self, all_containers: bool = False):
+        """Display containers in table format"""
+        containers = self.list_containers(all_containers)
+        
+        if not containers:
+            print("📭 No containers found")
+            return
+        
+        headers = ['ID', 'Name', 'Image', 'Status', 'Created
+

@@ -18,3 +18,16 @@ class DeploymentStatus(Enum):
     IN_PROGRESS = "⏳ IN PROGRESS"
     PENDING = "⏸️ PENDING"
     UNKNOWN = "❓ UNKNOWN
+    class DeploymentChecker:
+    def __init__(self, config_file: str = "deployment_config.json"):
+        self.config = self._load_config(config_file)
+        self.results = {}
+        
+    def _load_config(self, config_file: str) -> Dict:
+        """Load deployment configuration"""
+        try:
+            with open(config_file, 'r') as f:
+                return json.load(f)
+        except FileNotFoundError:
+            # Default configuration
+            return {

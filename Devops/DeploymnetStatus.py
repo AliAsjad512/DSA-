@@ -86,3 +86,53 @@ class DeploymentStatus(Enum):
             status = DeploymentStatus.FAILED
             response_time = 0
             details = {'error': str(e)}
+
+               return {
+            'status': status,
+            'response_time_ms': response_time,
+            'details': details,
+            'checked_at': datetime.now().isoformat()
+        }
+    
+    def check_version(self, env_config: Dict) -> Dict:
+        """Check deployed version"""
+        url = env_config['url'] + env_config.get('version_endpoint', '/version')
+        
+        try:
+            response = requests.get(url, timeout=env_config.get('timeout', 5))
+            if response.status_code == 200:
+                version_info = response.json()
+                current_version = version_info.get('version', 'unknown')
+                
+                expected = self.config.get('expected_version')
+                if expected and current_version == expected:
+                    status = DeploymentStatus.SUCCESS
+                else:
+                    status = DeploymentStatus.FAILED
+            else:
+                current_version = 'unknown'
+                status = DeploymentStatus.UNKNOWN
+        except:
+            current_version = 'error'
+            status = DeploymentStatus.UNKNOWN
+        
+        return {
+            'current_version': current_version,
+            'expected_version': self.config.get('expected_version'),
+            'status': status,
+            'checked_at': datetime.now().isoformat()
+        }
+    
+    def check_all_environments(self) -> Dict:
+        """Check all configured environments"""
+        for env_name, env_config in self.config['environments'].items():
+            print(f"🔍 Checking {env_name.upper()} environment...")
+            
+            health_result = self.check_health(env_config)
+            version_result = self.check_version(env_config)
+            
+            self.results[env_name] = {
+                'health': health_result,
+                'version': version_result,
+                'overall_status': self._determine_overall_status(health_result, version_result)
+            }

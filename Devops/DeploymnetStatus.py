@@ -31,3 +31,26 @@ class DeploymentStatus(Enum):
         except FileNotFoundError:
             # Default configuration
             return {
+                "environments": {
+                    "dev": {
+                        "url": "http://dev.example.com",
+                        "health_endpoint": "/health",
+                        "version_endpoint": "/version",
+                        "timeout": 5
+                    },
+                    "staging": {
+                        "url": "http://staging.example.com",
+                        "health_endpoint": "/health",
+                        "version_endpoint": "/version",
+                        "timeout": 5
+                    },
+                    "production": {
+                        "url": "http://example.com",
+                        "health_endpoint": "/health",
+                        "version_endpoint": "/version",
+                        "timeout": 5
+                    }
+                },
+                "expected_version": "1.0.0",
+                "services": ["api", "web", "database"]
+            }

@@ -25,3 +25,20 @@ class BackupSystem:
             ]
         )
         self.logger = logging.getLogger(__name__)
+
+        self.backup_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Load or create metadata
+        self.metadata = self._load_metadata()
+        
+    def _load_metadata(self):
+        """Load backup metadata from file"""
+        if self.metadata_file.exists():
+            with open(self.metadata_file, 'r') as f:
+                return json.load(f)
+        return {'backups': [], 'total_size': 0}
+    
+    def _save_metadata(self):
+        """Save backup metadata to file"""
+        with open(self.metadata_file, 'w') as f:
+            json.dump(self.metadata, f, indent=2)

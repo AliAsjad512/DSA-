@@ -61,3 +61,54 @@ class BackupSystem:
                 if item.is_file():
                     total += item.stat().st_size
             return total
+        
+        def create_backup(self, source_path: str, backup_name: str = None, compress: bool = True):
+        """Create a backup of source path"""
+        source = Path(source_path)
+        
+        if not source.exists():
+            self.logger.error(f"Source path {source_path} does not exist")
+            return None
+        
+        # Generate backup name
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        if not backup_name:
+            backup_name = f"{source.name}_{timestamp}"
+        
+        # Create backup file
+        if compress:
+            backup_file = self.backup_dir / f"{backup_name}.tar.gz"
+            self.logger.info(f"Creating compressed backup: {backup_file}")
+            
+            with tarfile.open(backup_file, "w:gz") as tar:
+                tar.add(source, arcname=source.name)
+        else:
+            backup_file = self.backup_dir / backup_name
+            self.logger.info(f"Creating backup: {backup_file}")
+            
+            if source.is_file():
+                shutil.copy2(source, backup_file)
+            else:
+                shutil.copytree(source, backup_file)
+        
+        # Calculate backup info
+        backup_size = self._get_file_size(backup_file)
+        checksum = self._calculate_checksum(backup_file) if backup_file.is_file() else None
+        
+        # Add to metadata
+        backup_info = {
+            'name': backup_name,
+            'source': str(source),
+            'created_at': timestamp,
+            'size': backup_size,
+            'checksum': checksum,
+            'compressed': compress,
+            'path': str(backup_file)
+        }
+        
+        self.metadata['backups'].append(backup_info)
+        self.metadata['total_size'] += backup_size
+        self._save_metadata()
+        
+        self.logger.info(f"✅ Backup created successfully: {backup_file}")
+        return backup_info

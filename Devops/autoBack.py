@@ -42,3 +42,22 @@ class BackupSystem:
         """Save backup metadata to file"""
         with open(self.metadata_file, 'w') as f:
             json.dump(self.metadata, f, indent=2)
+
+            def _calculate_checksum(self, filepath: Path) -> str:
+        """Calculate MD5 checksum of a file"""
+        hash_md5 = hashlib.md5()
+        with open(filepath, "rb") as f:
+            for chunk in iter(lambda: f.read(4096), b""):
+                hash_md5.update(chunk)
+        return hash_md5.hexdigest()
+    
+    def _get_file_size(self, path: Path) -> int:
+        """Get size of file or directory"""
+        if path.is_file():
+            return path.stat().st_size
+        else:
+            total = 0
+            for item in path.rglob('*'):
+                if item.is_file():
+                    total += item.stat().st_size
+            return total

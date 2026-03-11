@@ -136,3 +136,61 @@ class DeploymentStatus(Enum):
                 'version': version_result,
                 'overall_status': self._determine_overall_status(health_result, version_result)
             }
+               def generate_report(self) -> str:
+        """Generate deployment status report"""
+        lines = []
+        lines.append("=" * 60)
+        lines.append("DEPLOYMENT STATUS REPORT")
+        lines.append(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        lines.append("=" * 60)
+        
+        for env_name, result in self.results.items():
+            lines.append(f"\n🌍 Environment: {env_name.upper()}")
+            lines.append("-" * 40)
+            lines.append(f"Overall: {result['overall_status'].value}")
+            
+            health = result['health']
+            lines.append(f"Health: {health['status'].value} ({health['response_time_ms']}ms)")
+            
+            version = result['version']
+            if version['status'] == DeploymentStatus.SUCCESS:
+                lines.append(f"Version: {version['current_version']} ✅")
+            else:
+                lines.append(f"Version: {version['current_version']} (expected: {version['expected_version']})")
+        
+        return "\n".join(lines)
+    
+    def send_alert(self, env_name: str, status: DeploymentStatus):
+        """Send alert for deployment issues"""
+        if status == DeploymentStatus.FAILED:
+            print(f"🔔 ALERT: Deployment to {env_name} FAILED!")
+            # Here you could integrate with Slack, Email, PagerDuty, etc.
+            # Example: send_slack_notification(f"Deployment to {env_name} failed!")
+
+
+# Usage
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Deployment Status Checker")
+    parser.add_argument("action", choices=['check', 'monitor', 'report'])
+    parser.add_argument("--env", help="Environment to check (dev, staging, production)")
+    parser.add_argument("--config", default="deployment_config.json", help="Configuration file")
+    parser.add_argument("--interval", type=int, default=5, help="Check interval in seconds")
+    
+    args = parser.parse_args()
+    
+    checker = DeploymentChecker(args.config)
+    
+    if args.action == 'check':
+        results = checker.check_all_environments()
+        print(checker.generate_report())
+    
+    elif args.action == 'monitor':
+        if not args.env:
+            print("❌ --env is required for monitor action")
+            sys.exit(1)
+        success = checker.monitor_deployment(args.env, args.interval)
+        sys.exit(0 if success else 1)
+    
+    elif args.action == 'report':
+        checker.check_all_environments()
+        print(checker.generate_report())

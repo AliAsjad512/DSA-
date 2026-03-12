@@ -179,4 +179,36 @@ class BackupSystem:
         except Exception as e:
             self.logger.error(f"Failed to restore backup: {e}")
             return False
+
+            def cleanup_old_backups(self):
+        """Remove backups older than retention days"""
+        cutoff_date = datetime.now() - timedelta(days=self.retention_days)
+        cutoff_str = cutoff_date.strftime('%Y%m%d')
+        
+        removed = []
+        kept = []
+        
+        for backup in self.metadata['backups'][:]:
+            backup_date = backup['created_at'][:8]  # YYYYMMDD
+            
+            if backup_date < cutoff_str:
+                backup_path = Path(backup['path'])
+                if backup_path.exists():
+                    if backup_path.is_file():
+                        backup_path.unlink()
+                    else:
+                        shutil.rmtree(backup_path)
+                    
+                    self.metadata['total_size'] -= backup['size']
+                    self.metadata['backups'].remove(backup)
+                    removed.append(backup['name'])
+                else:
+                    self.metadata['backups'].remove(backup)
+            else:
+                kept.append(backup['name'])
+        
+        self._save_metadata()
+        
+        self.logger.info(f"🧹 Cleanup completed: Removed {len(removed)} old backups, kept {len(kept)}")
+        return removed
     

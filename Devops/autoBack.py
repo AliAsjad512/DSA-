@@ -112,3 +112,71 @@ class BackupSystem:
         
         self.logger.info(f"✅ Backup created successfully: {backup_file}")
         return backup_info
+    
+    def list_backups(self):
+        """List all backups"""
+        if not self.metadata['backups']:
+            print("📂 No backups found")
+            return
+        
+        print("\n📋 BACKUP LIST:")
+        print("=" * 80)
+        print(f"{'Name':<30} {'Date':<20} {'Size':<15} {'Type':<10}")
+        print("-" * 80)
+        
+        for backup in sorted(self.metadata['backups'], key=lambda x: x['created_at'], reverse=True):
+            size_mb = backup['size'] / (1024 * 1024)
+            backup_type = "Compressed" if backup.get('compressed') else "Directory"
+            print(f"{backup['name'][:30]:<30} {backup['created_at']:<20} {size_mb:.2f} MB:{size_mb:<15.2f} MB {backup_type:<10}")
+    def restore_backup(self, backup_name: str, destination: str):
+        """Restore a backup to destination"""
+        # Find backup in metadata
+        backup_info = None
+        for backup in self.metadata['backups']:
+            if backup['name'] == backup_name or backup['path'] == backup_name:
+                backup_info = backup
+                break
+        
+        if not backup_info:
+            self.logger.error(f"Backup '{backup_name}' not found")
+            return False
+        
+        backup_path = Path(backup_info['path'])
+        dest_path = Path(destination)
+        
+        if not backup_path.exists():
+            self.logger.error(f"Backup file {backup_path} does not exist")
+            return False
+        
+        # Verify checksum
+        if backup_info.get('checksum'):
+            current_checksum = self._calculate_checksum(backup_path)
+            if current_checksum != backup_info['checksum']:
+                self.logger.warning("⚠️  Checksum mismatch! Backup may be corrupted.")
+                response = input("Continue anyway? (y/n): ")
+                if response.lower() != 'y':
+                    return False
+        
+        # Create destination directory
+        dest_path.mkdir(parents=True, exist_ok=True)
+        
+        try:
+            # Extract based on backup type
+            if backup_info.get('compressed'):
+                self.logger.info(f"Extracting {backup_path} to {dest_path}")
+                with tarfile.open(backup_path, "r:gz") as tar:
+                    tar.extractall(dest_path)
+            else:
+                self.logger.info(f"Copying {backup_path} to {dest_path}")
+                if backup_path.is_file():
+                    shutil.copy2(backup_path, dest_path)
+                else:
+                    shutil.copytree(backup_path, dest_path / backup_path.name, dirs_exist_ok=True)
+            
+            self.logger.info(f"✅ Backup restored successfully to {dest_path}")
+            return True
+            
+        except Exception as e:
+            self.logger.error(f"Failed to restore backup: {e}")
+            return False
+    

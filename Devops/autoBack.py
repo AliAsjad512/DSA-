@@ -232,4 +232,46 @@ class BackupSystem:
         }
 
 
+    if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Automated Backup System")
+    parser.add_argument("action", choices=['create', 'list', 'restore', 'cleanup', 'stats'])
+    parser.add_argument("--source", help="Source path for backup")
+    parser.add_argument("--name", help="Backup name")
+    parser.add_argument("--destination", help="Destination for restore")
+    parser.add_argument("--backup-dir", default="/tmp/backups", help="Backup directory")
+    parser.add_argument("--retention", type=int, default=30, help="Retention days")
     
+    args = parser.parse_args()
+    
+    backup_system = BackupSystem(backup_dir=args.backup_dir, retention_days=args.retention)
+    
+    if args.action == 'create':
+        if not args.source:
+            print("❌ --source is required for create action")
+            exit(1)
+        backup_system.create_backup(args.source, args.name)
+    
+    elif args.action == 'list':
+        backup_system.list_backups()
+    
+    elif args.action == 'restore':
+        if not args.name or not args.destination:
+            print("❌ --name and --destination are required for restore action")
+            exit(1)
+        backup_system.restore_backup(args.name, args.destination)
+    
+    elif args.action == 'cleanup':
+        removed = backup_system.cleanup_old_backups()
+        print(f"Removed {len(removed)} old backups")
+    
+    elif args.action == 'stats':
+        stats = backup_system.get_backup_stats()
+        print("\n📊 BACKUP STATISTICS:")
+        print("=" * 40)
+        print(f"Total Backups: {stats['total_backups']}")
+        print(f"Total Size: {stats['total_size_gb']} GB")
+        print(f"Oldest Backup: {stats['oldest_backup']}")
+        print(f"Newest Backup: {stats['newest_backup']}")
+        print("\nBackups by Date:")
+        for date, count in stats['backups_by_date'].items():
+            print(f"  {date}: {count} backup(s)")

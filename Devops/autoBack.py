@@ -212,3 +212,24 @@ class BackupSystem:
         self.logger.info(f"🧹 Cleanup completed: Removed {len(removed)} old backups, kept {len(kept)}")
         return removed
     
+    def get_backup_stats(self):
+        """Get backup statistics"""
+        total_backups = len(self.metadata['backups'])
+        total_size_gb = self.metadata['total_size'] / (1024**3)
+        
+        # Group by date
+        by_date = {}
+        for backup in self.metadata['backups']:
+            date = backup['created_at'][:8]  # YYYYMMDD
+            by_date[date] = by_date.get(date, 0) + 1
+        
+        return {
+            'total_backups': total_backups,
+            'total_size_gb': round(total_size_gb, 2),
+            'backups_by_date': by_date,
+            'oldest_backup': min(backup['created_at'] for backup in self.metadata['backups']) if self.metadata['backups'] else None,
+            'newest_backup': max(backup['created_at'] for backup in self.metadata['backups']) if self.metadata['backups'] else None
+        }
+
+
+    

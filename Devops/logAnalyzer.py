@@ -64,3 +64,18 @@ class LogAnalyzer:
                 if timestamp:
                     self.results[level]['timestamps'].append(timestamp)
                 break
+
+            def _extract_timestamp(self, line: str) -> str:
+        """Extract timestamp from log line"""
+        # Common timestamp patterns
+        patterns = [
+            r'\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}',
+            r'\d{2}/\d{2}/\d{4} \d{2}:\d{2}:\d{2}',
+            r'\d{2}:\d{2}:\d{2}'
+        ]
+        
+        for pattern in patterns:
+            match = re.search(pattern, line)
+            if match:
+                return match.group()
+        return None

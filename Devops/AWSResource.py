@@ -60,3 +60,14 @@ class AWSInventory:
                     'CreatedTime': db['InstanceCreateTime'].isoformat() if 'InstanceCreateTime' in db else 'N/A'
                 })
         return instances
+
+        def generate_inventory(self):
+        """Generate full inventory"""
+        self.resources = {
+            'ec2_instances': self.get_ec2_instances(),
+            's3_buckets': self.get_s3_buckets(),
+            'rds_instances': self.get_rds_instances(),
+            'generated_at': datetime.now().isoformat(),
+            'region': self.region
+        }
+        return self.resources

@@ -31,3 +31,14 @@ class AWSInventory:
                         'Tags': {t['Key']: t['Value'] for t in instance.get('Tags', [])}
                     })
         return instances
+
+        def get_s3_buckets(self):
+        """Get all S3 buckets"""
+        buckets = []
+        response = self.s3.list_buckets()
+        for bucket in response['Buckets']:
+            buckets.append({
+                'Name': bucket['Name'],
+                'CreationDate': bucket['CreationDate'].isoformat()
+            })
+        return buckets

@@ -42,3 +42,21 @@ class AWSInventory:
                 'CreationDate': bucket['CreationDate'].isoformat()
             })
         return buckets
+
+
+        
+    def get_rds_instances(self):
+        """Get all RDS instances"""
+        instances = []
+        paginator = self.rds.get_paginator('describe_db_instances')
+        for page in paginator.paginate():
+            for db in page['DBInstances']:
+                instances.append({
+                    'DBInstanceIdentifier': db['DBInstanceIdentifier'],
+                    'Engine': db['Engine'],
+                    'DBInstanceClass': db['DBInstanceClass'],
+                    'Status': db['DBInstanceStatus'],
+                    'Endpoint': db['Endpoint']['Address'] if 'Endpoint' in db else 'N/A',
+                    'CreatedTime': db['InstanceCreateTime'].isoformat() if 'InstanceCreateTime' in db else 'N/A'
+                })
+        return instances

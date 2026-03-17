@@ -80,3 +80,12 @@ class JenkinsMonitor:
         except Exception as e:
             print(f"❌ Error fetching build {build_number} for {job_name}: {e}")
             return None
+        
+          def monitor_jobs(self, job_list):
+        
+        results = {}
+        for job in job_list:
+            print(f"🔍 Checking job: {job}")
+            status = self.get_last_build_status(job)
+            results[job] = status
+        return results

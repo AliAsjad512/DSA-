@@ -79,3 +79,19 @@ class AWSInventory:
         with open(filename, 'w') as f:
             json.dump(self.resources, f, indent=2, default=str)
         print(f"✅ Inventory saved to {filename}")
+
+        if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='AWS Resource Inventory')
+    parser.add_argument('--region', default='us-east-1', help='AWS region')
+    parser.add_argument('--output', help='Output file name')
+    args = parser.parse_args()
+
+    inventory = AWSInventory(region=args.region)
+    inventory.generate_inventory()
+    inventory.save_to_file(args.output)
+
+    # Print summary
+    print(f"\n📊 AWS Inventory Summary ({args.region}):")
+    print(f"  EC2 Instances: {len(inventory.resources['ec2_instances'])}")
+    print(f"  S3 Buckets: {len(inventory.resources['s3_buckets'])}")
+    print(f"  RDS Instances: {len(inventory.resources['rds_instances'])}")

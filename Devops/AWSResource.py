@@ -71,3 +71,11 @@ class AWSInventory:
             'region': self.region
         }
         return self.resources
+        
+    def save_to_file(self, filename=None):
+        """Save inventory to JSON file"""
+        if not filename:
+            filename = f"aws_inventory_{self.region}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+        with open(filename, 'w') as f:
+            json.dump(self.resources, f, indent=2, default=str)
+        print(f"✅ Inventory saved to {filename}")

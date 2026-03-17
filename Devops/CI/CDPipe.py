@@ -114,3 +114,37 @@ class JenkinsMonitor:
             print("✅ Alert email sent")
         except Exception as e:
             print(f"❌ Failed to send email: {e}")
+
+            if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Jenkins Pipeline Monitor')
+    parser.add_argument('--url', required=True, help='Jenkins URL')
+    parser.add_argument('--username', required=True, help='Jenkins username')
+    parser.add_argument('--password', required=True, help='Jenkins password or API token')
+    parser.add_argument('--jobs', nargs='+', required=True, help='List of job names to monitor')
+    parser.add_argument('--email-to', help='Send alert email to this address')
+    args = parser.parse_args()
+
+    monitor = JenkinsMonitor(args.url, args.username, args.password)
+    results = monitor.monitor_jobs(args.jobs)
+
+    print("\n📊 Build Status Report:")
+    failed = {}
+    for job, status in results.items():
+        if status:
+            print(f"  {job}: {status['status']} at {status['timestamp']}")
+            if status['status'] == 'FAILURE':
+                failed[job] = status
+        else:
+            print(f"  {job}: ERROR fetching status")
+
+    if failed and args.email_to:
+        smtp_config = {
+            'host': 'smtp.gmail.com',
+            'port': 587,
+            'tls': True,
+            'user': 'your-email@gmail.com',  # Replace with your email
+            'password': 'your-app-password',  # Replace with your app password
+            'from': 'your-email@gmail.com',
+            'to': args.email_to
+        }
+        monitor.send_email_alert(failed, smtp_config)

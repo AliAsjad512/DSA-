@@ -89,3 +89,28 @@ class JenkinsMonitor:
             status = self.get_last_build_status(job)
             results[job] = status
         return results
+    
+    def send_email_alert(self, failed_jobs, smtp_config):
+        """Send email alert for failed jobs"""
+        msg = MIMEMultipart()
+        msg['From'] = smtp_config['from']
+        msg['To'] = smtp_config['to']
+        msg['Subject'] = f"Jenkins Alert: {len(failed_jobs)} job(s) failed"
+
+        body = "The following Jenkins jobs have failed:\n\n"
+        for job, info in failed_jobs.items():
+            body += f"- {job}: {info['url']} (at {info['timestamp']})\n"
+
+        msg.attach(MIMEText(body, 'plain'))
+
+        try:
+            server = smtplib.SMTP(smtp_config['host'], smtp_config['port'])
+            if smtp_config.get('tls'):
+                server.starttls()
+            if smtp_config.get('user'):
+                server.login(smtp_config['user'], smtp_config['password'])
+            server.send_message(msg)
+            server.quit()
+            print("✅ Alert email sent")
+        except Exception as e:
+            print(f"❌ Failed to send email: {e}")

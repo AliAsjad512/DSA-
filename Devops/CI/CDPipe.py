@@ -1,5 +1,5 @@
 CI/CD Pipeline Monitor - Check Jenkins job status and send alerts
-"""
+
 
 import requests
 from requests.auth import HTTPBasicAuth
@@ -27,4 +27,56 @@ class JenkinsMonitor:
             return response.json()
         except Exception as e:
             print(f"❌ Error fetching job {job_name}: {e}")
+            return None
+
+            def get_last_build_status(self, job_name):
+        Get status of last build for a job
+        job = self.get_job_info(job_name)
+        if not job:
+            return None
+        
+        last_build = job.get('lastBuild')
+        if not last_build:
+            return {'status': 'NO_BUILDS', 'timestamp': None}
+        
+        build_number = last_build['number']
+        build_url = f"{self.url}/job/{job_name}/{build_number}/api/json"
+        try:
+            response = self.session.get(build_url)
+            response.raise_for_status()
+            build = response.json()
+            return {
+                'status': build['result'],
+                'timestamp': datetime.fromtimestamp(build['timestamp']/1000).isoformat(),
+                'duration': build.get('duration', 0),
+                'url': build['url']
+            }
+        except Exception as e:
+            print(f"❌ Error fetching build {build_number} for {job_name}: {e}")
+            return None
+        
+        def get_last_build_status(self, job_name):
+        """Get status of last build for a job"""
+        job = self.get_job_info(job_name)
+        if not job:
+            return None
+        
+        last_build = job.get('lastBuild')
+        if not last_build:
+            return {'status': 'NO_BUILDS', 'timestamp': None}
+        
+        build_number = last_build['number']
+        build_url = f"{self.url}/job/{job_name}/{build_number}/api/json"
+        try:
+            response = self.session.get(build_url)
+            response.raise_for_status()
+            build = response.json()
+            return {
+                'status': build['result'],
+                'timestamp': datetime.fromtimestamp(build['timestamp']/1000).isoformat(),
+                'duration': build.get('duration', 0),
+                'url': build['url']
+            }
+        except Exception as e:
+            print(f"❌ Error fetching build {build_number} for {job_name}: {e}")
             return None

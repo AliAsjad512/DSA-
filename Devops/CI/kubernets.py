@@ -94,3 +94,11 @@ class K8sPodMonitor:
             table_data.append([name, status, restart_count, age_str])
 
         print(tabulate(table_data, headers=['Pod Name', 'Status', 'Restarts', 'Age'], tablefmt='grid'))
+
+        unhealthy = monitor.get_unhealthy_pods()
+        if unhealthy:
+            print(f"\n⚠️ Unhealthy pods ({len(unhealthy)}):")
+            for pod in unhealthy:
+                print(f"  - {pod.metadata.name} ({pod.status.phase})")
+    else:
+        monitor.monitor_pods(interval=args.interval)

@@ -71,3 +71,13 @@ class K8sPodMonitor:
                             unhealthy.append(pod)
                             break
         return unhealthy
+
+
+        if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Kubernetes Pod Monitor')
+    parser.add_argument('--namespace', default='default', help='Kubernetes namespace')
+    parser.add_argument('--interval', type=int, default=5, help='Refresh interval (seconds)')
+    parser.add_argument('--once', action='store_true', help='Run once and exit (no continuous monitoring)')
+    args = parser.parse_args()
+
+    monitor = K8sPodMonitor(namespace=args.namespace)

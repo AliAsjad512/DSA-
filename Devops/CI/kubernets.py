@@ -81,3 +81,16 @@ class K8sPodMonitor:
     args = parser.parse_args()
 
     monitor = K8sPodMonitor(namespace=args.namespace)
+
+    if args.once:
+        pods = monitor.get_pods()
+        table_data = []
+        for pod in pods:
+            name = pod.metadata.name
+            status = pod.status.phase
+            restart_count = sum(cs.restart_count for cs in pod.status.container_statuses or [])
+            age = datetime.datetime.now() - pod.metadata.creation_timestamp.replace(tzinfo=None)
+            age_str = str(age).split('.')[0]
+            table_data.append([name, status, restart_count, age_str])
+
+        print(tabulate(table_data, headers=['Pod Name', 'Status', 'Restarts', 'Age'], tablefmt='grid'))

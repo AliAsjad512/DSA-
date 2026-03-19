@@ -20,3 +20,11 @@ def get_ec2_instances(filters=None):
                 if instance['State']['Name'] == 'running':
                     instances.append(instance)
     return instances
+
+    def build_inventory(instances, group_by='tag:Environment'):
+    """Build Ansible inventory from instances"""
+    inventory = {
+        '_meta': {
+            'hostvars': {}
+        }
+    }

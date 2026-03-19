@@ -54,3 +54,20 @@ class K8sPodMonitor:
                 time.sleep(interval)
         except KeyboardInterrupt:
             print("\n🛑 Monitoring stopped")
+
+
+            def get_unhealthy_pods(self):
+        """Return list of pods that are not running"""
+        pods = self.get_pods()
+        unhealthy = []
+        for pod in pods:
+            if pod.status.phase != 'Running':
+                unhealthy.append(pod)
+            else:
+                # Check if all containers are ready
+                if pod.status.container_statuses:
+                    for cs in pod.status.container_statuses:
+                        if not cs.ready:
+                            unhealthy.append(pod)
+                            break
+        return unhealthy

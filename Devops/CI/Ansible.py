@@ -64,3 +64,25 @@ def get_ec2_instances(filters=None):
                 inventory[group]['hosts'].append(hostname)
 
     return inventory
+
+
+    def main():
+    parser = argparse.ArgumentParser(description='Ansible Dynamic Inventory for AWS EC2')
+    parser.add_argument('--list', action='store_true', help='List instances')
+    parser.add_argument('--host', help='Get host variables for a specific host')
+    args = parser.parse_args()
+
+    if args.list:
+        instances = get_ec2_instances()
+        inventory = build_inventory(instances)
+        print(json.dumps(inventory, indent=2))
+    elif args.host:
+        # Return host vars for a specific host (Ansible calls this with --host <hostname>)
+        # We'll just return empty dict because _meta contains all vars
+        print(json.dumps({}))
+    else:
+        parser.print_help()
+        sys.exit(1)
+
+if __name__ == '__main__':
+    main()

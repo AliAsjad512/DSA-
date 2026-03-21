@@ -47,3 +47,16 @@ class SSLChecker:
             'issuer': {k.decode(): v.decode() for k, v in issuer.items()},
             'valid': days_left > 0
         }
+
+          @staticmethod
+    def check_multiple(hosts):
+        """Check multiple hosts"""
+        results = {}
+        for host in hosts:
+            try:
+                checker = SSLChecker(host)
+                results[host] = checker.check_expiry()
+            except Exception as e:
+                results[host] = {'error': str(e)}
+        return results
+

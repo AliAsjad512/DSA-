@@ -90,3 +90,30 @@ Threshold: {self.threshold}%
                 time.sleep(interval)
         except KeyboardInterrupt:
             print("\n🛑 Monitoring stopped")
+            if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Disk Usage Monitor')
+    parser.add_argument('--threshold', type=int, default=80, help='Alert threshold percentage')
+    parser.add_argument('--path', default='/', help='Path to monitor')
+    parser.add_argument('--interval', type=int, default=60, help='Check interval in seconds')
+    parser.add_argument('--email-to', help='Email address to send alerts')
+    parser.add_argument('--slack-webhook', help='Slack webhook URL')
+    args = parser.parse_args()
+
+    smtp_config = None
+    if args.email_to:
+        # For Gmail, use these settings; adjust for other providers
+        smtp_config = {
+            'host': 'smtp.gmail.com',
+            'port': 587,
+            'tls': True,
+            'user': os.environ.get('SMTP_USER'),  # Set environment variables
+            'password': os.environ.get('SMTP_PASSWORD'),
+            'from': os.environ.get('SMTP_FROM', 'alerts@example.com'),
+            'to': args.email_to
+        }
+        if not smtp_config['user'] or not smtp_config['password']:
+            print("❌ SMTP credentials not set in environment (SMTP_USER, SMTP_PASSWORD)")
+            sys.exit(1)
+
+    monitor = DiskMonitor(threshold=args.threshold, path=args.path)
+    monitor.monitor(interval=args.interval, smtp_config=smtp_config, slack_webhook=args.slack_webhook)

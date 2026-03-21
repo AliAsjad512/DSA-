@@ -56,3 +56,37 @@ Threshold: {self.threshold}%
             print("✅ Email alert sent")
         except Exception as e:
             print(f"❌ Failed to send email: {e}")g
+            def send_slack_alert(self, info, webhook_url):
+        """Send Slack alert via webhook"""
+        message = {
+            "text": f"⚠️ *Disk Usage Alert*\nPath: {info['path']}\nUsage: {info['percent']}%\nFree: {info['free_gb']} GB\nThreshold: {self.threshold}%"
+        }
+        try:
+            response = requests.post(webhook_url, json=message)
+            response.raise_for_status()
+            print("✅ Slack alert sent")
+        except Exception as e:
+            print(f"❌ Failed to send Slack alert: {e}")
+
+    def monitor(self, interval=60, smtp_config=None, slack_webhook=None):
+        """Continuous monitoring loop"""
+        print(f"🔍 Monitoring disk usage on {self.path} (threshold {self.threshold}%)")
+        try:
+            while True:
+                info = self.check_disk_usage()
+                print(f"  Usage: {info['percent']}% (Free: {info['free_gb']} GB)")
+
+                if info['percent'] >= self.threshold:
+                    if not self.alert_sent:
+                        print(f"⚠️ ALERT: Disk usage exceeded {self.threshold}%")
+                        if smtp_config:
+                            self.send_email_alert(info, smtp_config)
+                        if slack_webhook:
+                            self.send_slack_alert(info, slack_webhook)
+                        self.alert_sent = True
+                else:
+                    self.alert_sent = False
+
+                time.sleep(interval)
+        except KeyboardInterrupt:
+            print("\n🛑 Monitoring stopped")

@@ -59,4 +59,12 @@ class SSLChecker:
             except Exception as e:
                 results[host] = {'error': str(e)}
         return results
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='SSL Certificate Expiry Checker')
+    parser.add_argument('hosts', nargs='+', help='Hostnames to check')
+    parser.add_argument('--port', type=int, default=443, help='Port (default 443)')
+    parser.add_argument('--threshold', type=int, default=30, help='Alert threshold in days')
+    parser.add_argument('--output', help='Output JSON file')
+    args = parser.parse_args()
 
+    results = SSLChecker.check_multiple(args.hosts)

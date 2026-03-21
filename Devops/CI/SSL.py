@@ -68,3 +68,19 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     results = SSLChecker.check_multiple(args.hosts)
+    print("\n🔒 SSL Certificate Expiry Report:")
+    print("=" * 60)
+    for host, info in results.items():
+        if 'error' in info:
+            print(f"❌ {host}: ERROR - {info['error']}")
+        else:
+            status = "✅" if info['days_left'] > args.threshold else "⚠️" if info['days_left'] > 0 else "❌"
+            print(f"{status} {host}: expires in {info['days_left']} days ({info['expiry_date']})")
+            if info['days_left'] <= args.threshold:
+                print(f"   → ALERT: Less than {args.threshold} days remaining!")
+
+    if args.output:
+        with open(args.output, 'w') as f:
+            json.dump(results, f, indent=2, default=str)
+        print(f"\n✅ Report saved to {args.output}")
+

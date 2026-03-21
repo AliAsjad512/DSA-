@@ -34,3 +34,25 @@ class DiskMonitor:
         """Send email alert"""
         msg = MIMEText(f"""
 Disk Usage Alert!
+                       Path: {info['path']}
+Current usage: {info['percent']}%
+Free space: {info['free_gb']} GB
+Total: {info['total_gb']} GB
+
+Threshold: {self.threshold}%
+""")
+        msg['Subject'] = f"⚠️ Disk Usage Alert: {info['percent']}% on {info['path']}"
+        msg['From'] = smtp_config['from']
+        msg['To'] = smtp_config['to']
+
+        try:
+            server = smtplib.SMTP(smtp_config['host'], smtp_config['port'])
+            if smtp_config.get('tls'):
+                server.starttls()
+            if smtp_config.get('user'):
+                server.login(smtp_config['user'], smtp_config['password'])
+            server.send_message(msg)
+            server.quit()
+            print("✅ Email alert sent")
+        except Exception as e:
+            print(f"❌ Failed to send email: {e}")g

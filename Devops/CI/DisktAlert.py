@@ -10,3 +10,9 @@ from email.mime.text import MIMEText
 import json
 import time
 import os
+
+class DiskMonitor:
+    def __init__(self, threshold=80, path='/'):
+        self.threshold = threshold
+        self.path = path
+        self.alert_sent = False  # To avoid repeated alerts

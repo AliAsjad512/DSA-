@@ -119,3 +119,22 @@ if __name__ == '__main__':
         sys.exit(1)
 
     report = parser.generate_report()
+
+    print("\n📊 Kubernetes YAML Report:")
+    print(f"  Total documents: {report['total_documents']}")
+    print(f"  Resource types: {report['resource_types']}")
+    print(f"  Unique images ({len(report['images'])}):")
+    for img in report['images']:
+        print(f"    - {img}")
+
+    if report['validation_errors']:
+        print("\n❌ Validation errors:")
+        for err in report['validation_errors']:
+            print(f"    - {err}")
+    else:
+        print("\n✅ No validation errors found.")
+
+    if args.output:
+        with open(args.output, 'w') as f:
+            json.dump(report, f, indent=2)
+        print(f"✅ Report saved to {args.output}")

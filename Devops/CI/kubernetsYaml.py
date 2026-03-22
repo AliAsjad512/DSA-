@@ -85,3 +85,21 @@ class K8sYamlParser:
                     if 'image' in c:
                         images.add(c['image'])
         return sorted(images)
+
+def generate_report(self):
+        """Generate a report of resources found"""
+        resource_count = {}
+        for doc in self.documents:
+            kind = doc.get('kind', 'Unknown')
+            resource_count[kind] = resource_count.get(kind, 0) + 1
+
+        images = self.get_images()
+        errors = self.validate()
+
+        report = {
+            'total_documents': len(self.documents),
+            'resource_types': resource_count,
+            'images': images,
+            'validation_errors': errors
+        }
+        return report

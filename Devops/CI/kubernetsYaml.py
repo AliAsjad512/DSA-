@@ -103,3 +103,19 @@ def generate_report(self):
             'validation_errors': errors
         }
         return report
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Kubernetes YAML Parser')
+    parser.add_argument('path', help='File or directory to parse')
+    parser.add_argument('--output', help='Output JSON file', default=None)
+    args = parser.parse_args()
+
+    parser = K8sYamlParser()
+    if os.path.isfile(args.path):
+        parser.load_file(args.path)
+    elif os.path.isdir(args.path):
+        parser.load_directory(args.path)
+    else:
+        print(f"❌ Path not found: {args.path}")
+        sys.exit(1)
+
+    report = parser.generate_report()

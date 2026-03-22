@@ -57,3 +57,31 @@ class K8sYamlParser:
                     if 'image' not in c:
                         errors.append(f"Document {idx}: Container '{c.get('name', 'unknown')}' missing image")
         return errors
+ def get_images(self):
+        """Extract all container images from the manifests"""
+        images = set()
+        for doc in self.documents:
+            if not doc:
+                continue
+            kind = doc.get('kind')
+            if kind in ['Deployment', 'StatefulSet', 'DaemonSet', 'Job', 'CronJob']:
+                spec = doc.get('spec', {})
+                if kind == 'CronJob':
+                    spec = spec.get('jobTemplate', {}).get('spec', {})
+                template = spec.get('template', {})
+                pod_spec = template.get('spec', {})
+                containers = pod_spec.get('containers', [])
+                for c in containers:
+                    if 'image' in c:
+                        images.add(c['image'])
+                init_containers = pod_spec.get('initContainers', [])
+                for c in init_containers:
+                    if 'image' in c:
+                        images.add(c['image'])
+            elif kind == 'Pod':
+                spec = doc.get('spec', {})
+                containers = spec.get('containers', [])
+                for c in containers:
+                    if 'image' in c:
+                        images.add(c['image'])
+        return sorted(images)

@@ -28,4 +28,32 @@ class K8sYamlParser:
             print(f"📄 Loading {file}")
             self.load_file(file)
 
-            
+ def validate(self):
+        """Basic validation of Kubernetes resources"""
+        errors = []
+        for idx, doc in enumerate(self.documents):
+            if not doc:
+                continue
+            # Check required fields
+            if 'apiVersion' not in doc:
+                errors.append(f"Document {idx}: missing apiVersion")
+            if 'kind' not in doc:
+                errors.append(f"Document {idx}: missing kind")
+            if 'metadata' not in doc:
+                errors.append(f"Document {idx}: missing metadata")
+            elif 'name' not in doc['metadata']:
+                errors.append(f"Document {idx}: missing metadata.name")
+
+            # Check for common issues
+            if doc.get('kind') == 'Deployment':
+                spec = doc.get('spec', {})
+                if 'replicas' in spec and spec['replicas'] == 0:
+                    errors.append(f"Document {idx}: Deployment '{doc['metadata']['name']}' has 0 replicas")
+                # Check if image is specified
+                template = spec.get('template', {})
+                pod_spec = template.get('spec', {})
+                containers = pod_spec.get('containers', [])
+                for c in containers:
+                    if 'image' not in c:
+                        errors.append(f"Document {idx}: Container '{c.get('name', 'unknown')}' missing image")
+        return errors

@@ -19,3 +19,13 @@ class K8sYamlParser:
             except yaml.YAMLError as e:
                 print(f"❌ YAML parsing error in {filepath}: {e}")
                 return None
+
+
+                   def load_directory(self, directory):
+        """Load all YAML files in a directory"""
+        yaml_files = list(Path(directory).glob('*.yaml')) + list(Path(directory).glob('*.yml'))
+        for file in yaml_files:
+            print(f"📄 Loading {file}")
+            self.load_file(file)
+
+            

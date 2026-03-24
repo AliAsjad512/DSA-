@@ -17,3 +17,13 @@ class K8sPodMonitor:
         except config.ConfigException:
             config.load_kube_config()
         self.v1 = client.CoreV1Api()
+
+        def get_pods(self):
+        """Get all pods in namespace"""
+        try:
+            pods = self.v1.list_namespaced_pod(namespace=self.namespace)
+            return pods.items
+        except ApiException as e:
+            print(f"❌ Kubernetes API error: {e}")
+            return []
+

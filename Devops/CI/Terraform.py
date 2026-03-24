@@ -47,3 +47,41 @@ class TerraformStateManager:
             if self.lock_table:
                 self._release_lock()
 
+                 def _acquire_lock(self):
+        """Acquire DynamoDB lock for state file"""
+        try:
+            self.lock_table.put_item(
+                Item={
+                    'LockID': self.key,
+                    'AcquiredAt': datetime.utcnow().isoformat(),
+                    'ExpiresAt': (datetime.utcnow() + timedelta(minutes=15)).isoformat()
+                },
+                ConditionExpression='attribute_not_exists(LockID)'
+            )
+            return True
+        except:
+            return False
+
+    def _release_lock(self):
+        """Release DynamoDB lock"""
+        self.lock_table.delete_item(Key={'LockID': self.key})
+
+    def backup_state(self, backup_bucket=None):
+        """Create a backup of state file"""
+        state = self.get_state()
+        if not state:
+            print("No state file found")
+            return
+        backup_key = f"{self.key}.{datetime.now().strftime('%Y%m%d_%H%M%S')}.backup"
+        if backup_bucket:
+            target_bucket = backup_bucket
+        else:
+            target_bucket = self.bucket
+        self.s3.put_object(
+            Bucket=target_bucket,
+            Key=backup_key,
+            Body=json.dumps(state, indent=2)
+        )
+        print(f"✅ State backed up to s3://{target_bucket}/{backup_key}")
+
+

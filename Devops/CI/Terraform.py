@@ -83,5 +83,27 @@ class TerraformStateManager:
             Body=json.dumps(state, indent=2)
         )
         print(f"✅ State backed up to s3://{target_bucket}/{backup_key}")
+        def diff_state(self, other_state_file):
+        """Compare current state with another state file"""
+        current = self.get_state()
+        with open(other_state_file, 'r') as f:
+            other = json.load(f)
+        # Simple diff (you could use deepdiff library)
+        if current == other:
+            print("States are identical")
+        else:
+            print("States differ")
+            # Add detailed diff logic here
+
+
+if __name__ == '__main__':
+    import argparse
+    parser = argparse.ArgumentParser(description='Terraform State Manager')
+    parser.add_argument('--bucket', required=True, help='S3 bucket')
+    parser.add_argument('--key', required=True, help='State file key')
+    parser.add_argument('--action', choices=['get', 'put', 'backup'], required=True)
+    parser.add_argument('--state-file', help='State file for put/diff')
+    args = parser.parse_args()
+
 
 

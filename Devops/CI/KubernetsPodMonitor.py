@@ -68,4 +68,34 @@ class K8sPodMonitor:
                             unhealthy.append(pod)
                             break
         return unhealthy
+    if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Kubernetes Pod Monitor')
+    parser.add_argument('--namespace', default='default', help='Kubernetes namespace')
+    parser.add_argument('--interval', type=int, default=5, help='Refresh interval (seconds)')
+    parser.add_argument('--once', action='store_true', help='Run once and exit (no continuous monitoring)')
+    args = parser.parse_args()
+
+    monitor = K8sPodMonitor(namespace=args.namespace)
+
+    if args.once:
+        pods = monitor.get_pods()
+        table_data = []
+        for pod in pods:
+            name = pod.metadata.name
+            status = pod.status.phase
+            restart_count = sum(cs.restart_count for cs in pod.status.container_statuses or [])
+            age = datetime.datetime.now() - pod.metadata.creation_timestamp.replace(tzinfo=None)
+            age_str = str(age).split('.')[0]
+            table_data.append([name, status, restart_count, age_str])
+
+        print(tabulate(table_data, headers=['Pod Name', 'Status', 'Restarts', 'Age'], tablefmt='grid'))
+
+        unhealthy = monitor.get_unhealthy_pods()
+        if unhealthy:
+            print(f"\n⚠️ Unhealthy pods ({len(unhealthy)}):")
+            for pod in unhealthy:
+                print(f"  - {pod.metadata.name} ({pod.status.phase})")
+    else:
+        monitor.monitor_pods(interval=args.interval)
+
 

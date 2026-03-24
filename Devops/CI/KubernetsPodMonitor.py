@@ -26,4 +26,31 @@ class K8sPodMonitor:
         except ApiException as e:
             print(f"❌ Kubernetes API error: {e}")
             return []
+        def monitor_pods(self, interval=5):
+        """Continuously monitor pod status"""
+        print(f"🔍 Monitoring pods in namespace '{self.namespace}' (Ctrl+C to stop)")
+        try:
+            while True:
+                pods = self.get_pods()
+                table_data = []
+                for pod in pods:
+                    name = pod.metadata.name
+                    status = pod.status.phase
+                    restart_count = sum(cs.restart_count for cs in pod.status.container_statuses or [])
+                    age = datetime.datetime.now() - pod.metadata.creation_timestamp.replace(tzinfo=None)
+                    age_str = str(age).split('.')[0]  # remove microseconds
+
+                    # Check conditions
+                    ready_conditions = [c for c in pod.status.conditions if c.type == 'Ready'] if pod.status.conditions else []
+                    ready = 'Yes' if ready_conditions and ready_conditions[0].status == 'True' else 'No'
+
+                    table_data.append([name, status, ready, restart_count, age_str])
+
+                # Clear screen and print table
+                print("\033[2J\033[H")  # ANSI clear screen
+                print(f"📊 Pod Status in namespace '{self.namespace}' at {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+                print(tabulate(table_data, headers=['Pod Name', 'Status', 'Ready', 'Restarts', 'Age'], tablefmt='grid'))
+                time.sleep(interval)
+        except KeyboardInterrupt:
+            print("\n🛑 Monitoring stopped")
 

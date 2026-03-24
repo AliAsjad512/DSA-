@@ -104,6 +104,17 @@ if __name__ == '__main__':
     parser.add_argument('--action', choices=['get', 'put', 'backup'], required=True)
     parser.add_argument('--state-file', help='State file for put/diff')
     args = parser.parse_args()
+    manager = TerraformStateManager(args.bucket, args.key)
+    if args.action == 'get':
+        state = manager.get_state()
+        if state:
+            print(json.dumps(state, indent=2))
+    elif args.action == 'put':
+        with open(args.state_file, 'r') as f:
+            state = json.load(f)
+        manager.put_state(state)
+    elif args.action == 'backup':
+        manager.backup_state()
 
 
 

@@ -35,3 +35,8 @@ backend {{ backend.name }}
     server {{ server.name }} {{ server.host }}:{{ server.port }} check
     {% endfor %}
 {% endfor %}
+
+    def load_config(self, config_file):
+        """Load YAML configuration"""
+        with open(config_file, 'r') as f:
+            return yaml.safe_load(f)

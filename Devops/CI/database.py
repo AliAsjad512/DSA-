@@ -26,3 +26,14 @@ class MigrationRunner:
         except subprocess.CalledProcessError as e:
             self.logger.error(f"Migration failed: {e.stderr}")
             sys.exit(1)
+
+             def create_migration(self, message, autogenerate=True):
+        """Create a new migration"""
+        cmd = ['alembic', '-c', self.config_file, 'revision', '--autogenerate' if autogenerate else '', '-m', message]
+        cmd = [c for c in cmd if c]  # remove empty
+        try:
+            subprocess.run(cmd, check=True)
+            self.logger.info(f"✅ Created migration: {message}")
+        except subprocess.CalledProcessError as e:
+            self.logger.error(f"Failed to create migration: {e.stderr}")
+            sys.exit(1)

@@ -12,3 +12,17 @@ class MigrationRunner:
         self.env = env
         self.logger = logging.getLogger(__name__)
         logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+         def run_migration(self, revision='head'):
+        """Run alembic upgrade"""
+        try:
+            subprocess.run(
+                ['alembic', '-c', self.config_file, 'upgrade', revision],
+                check=True,
+                capture_output=True,
+                text=True
+            )
+            self.logger.info(f"✅ Migration to {revision} succeeded")
+        except subprocess.CalledProcessError as e:
+            self.logger.error(f"Migration failed: {e.stderr}")
+            sys.exit(1)

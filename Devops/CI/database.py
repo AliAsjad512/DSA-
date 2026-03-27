@@ -37,3 +37,7 @@ class MigrationRunner:
         except subprocess.CalledProcessError as e:
             self.logger.error(f"Failed to create migration: {e.stderr}")
             sys.exit(1)
+
+            def show_history(self):
+        """Show migration history"""
+        subprocess.run(['alembic', '-c', self.config_file, 'history'])

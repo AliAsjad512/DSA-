@@ -51,3 +51,16 @@ def save_config(self, content, output_file):
         with open(output_file, 'w') as f:
             f.write(content)
         print(f"✅ HAProxy config saved to {output_file}")
+
+
+        if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='HAProxy Config Generator')
+    parser.add_argument('config', help='YAML configuration file')
+    parser.add_argument('--output', default='haproxy.cfg', help='Output file')
+    parser.add_argument('--template', help='Custom Jinja2 template')
+    args = parser.parse_args()
+
+    generator = HAProxyConfigGenerator(args.template)
+    data = generator.load_config(args.config)
+    config_content = generator.generate(data)
+    generator.save_config(config_content, args.output)

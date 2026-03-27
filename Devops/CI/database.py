@@ -53,3 +53,23 @@ class MigrationRunner:
         except subprocess.CalledProcessError as e:
             self.logger.error(f"Downgrade failed: {e.stderr}")
             sys.exit(1)
+
+def current_version(self):
+        """Show current database revision"""
+        result = subprocess.run(
+            ['alembic', '-c', self.config_file, 'current'],
+            capture_output=True,
+            text=True
+        )
+        print(result.stdout)
+
+    def run_with_env(self, env_config):
+        """Set environment variables before running migrations"""
+        # Load environment-specific config from yaml
+        if env_config:
+            with open(env_config, 'r') as f:
+                env_data = yaml.safe_load(f).get(self.env, {})
+            for key, value in env_data.items():
+                os.environ[key] = str(value)
+        # Then run migration
+        self.run_migration()

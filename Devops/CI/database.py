@@ -73,3 +73,14 @@ def current_version(self):
                 os.environ[key] = str(value)
         # Then run migration
         self.run_migration()
+
+        if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Database Migration Runner')
+    parser.add_argument('--config', default='alembic.ini', help='Alembic config file')
+    parser.add_argument('--env', default='development', help='Environment (used with --env-config)')
+    parser.add_argument('--env-config', help='YAML file with environment variables')
+    subparsers = parser.add_subparsers(dest='command', required=True)
+
+    # Upgrade
+    upgrade_parser = subparsers.add_parser('upgrade')
+    upgrade_parser.add_argument('--revision', default='head', help='Revision to upgrade to')

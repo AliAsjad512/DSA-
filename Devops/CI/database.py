@@ -41,3 +41,15 @@ class MigrationRunner:
             def show_history(self):
         """Show migration history"""
         subprocess.run(['alembic', '-c', self.config_file, 'history'])
+
+          def downgrade(self, revision='-1'):
+        """Downgrade database"""
+        try:
+            subprocess.run(
+                ['alembic', '-c', self.config_file, 'downgrade', revision],
+                check=True
+            )
+            self.logger.info(f"✅ Downgraded to {revision}")
+        except subprocess.CalledProcessError as e:
+            self.logger.error(f"Downgrade failed: {e.stderr}")
+            sys.exit(1)

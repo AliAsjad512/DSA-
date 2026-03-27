@@ -100,3 +100,18 @@ def current_version(self):
 
     args = parser.parse_args()
 
+runner = MigrationRunner(args.config, args.env)
+    if args.command == 'upgrade':
+        if args.env_config:
+            runner.run_with_env(args.env_config)
+        else:
+            runner.run_migration(args.revision)
+    elif args.command == 'create':
+        runner.create_migration(args.message, autogenerate=not args.no_autogenerate)
+    elif args.command == 'history':
+        runner.show_history()
+    elif args.command == 'current':
+        runner.current_version()
+    elif args.command == 'downgrade':
+        runner.downgrade(args.revision)
+

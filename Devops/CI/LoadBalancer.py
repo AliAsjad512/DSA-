@@ -45,3 +45,9 @@ backend {{ backend.name }}
         """Generate HAProxy config from YAML data"""
         template = Template(self.template_file)
         return template.render(**config)
+
+def save_config(self, content, output_file):
+        """Save generated config to file"""
+        with open(output_file, 'w') as f:
+            f.write(content)
+        print(f"✅ HAProxy config saved to {output_file}")

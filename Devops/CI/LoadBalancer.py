@@ -40,3 +40,8 @@ backend {{ backend.name }}
         """Load YAML configuration"""
         with open(config_file, 'r') as f:
             return yaml.safe_load(f)
+        
+          def generate(self, config):
+        """Generate HAProxy config from YAML data"""
+        template = Template(self.template_file)
+        return template.render(**config)

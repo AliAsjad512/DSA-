@@ -84,3 +84,19 @@ def current_version(self):
     # Upgrade
     upgrade_parser = subparsers.add_parser('upgrade')
     upgrade_parser.add_argument('--revision', default='head', help='Revision to upgrade to')
+
+# Create
+    create_parser = subparsers.add_parser('create')
+    create_parser.add_argument('message', help='Migration message')
+    create_parser.add_argument('--no-autogenerate', action='store_true', help='Disable autogenerate')
+
+    # History
+    subparsers.add_parser('history')
+    subparsers.add_parser('current')
+
+    # Downgrade
+    downgrade_parser = subparsers.add_parser('downgrade')
+    downgrade_parser.add_argument('--revision', default='-1', help='Revision to downgrade to')
+
+    args = parser.parse_args()
+

@@ -109,3 +109,15 @@ if __name__ == '__main__':
     upload_parser = subparsers.add_parser('upload')
     upload_parser.add_argument('path', help='File or directory to upload')
     upload_parser.add_argument('--compress', action='store_true', help='Compress before upload')
+    list_parser = subparsers.add_parser('list')
+
+    # Cleanup
+    cleanup_parser = subparsers.add_parser('cleanup')
+    cleanup_parser.add_argument('--days', type=int, default=30, help='Retention days')
+
+    # Restore
+    restore_parser = subparsers.add_parser('restore')
+    restore_parser.add_argument('s3_key', help='S3 key to restore')
+    restore_parser.add_argument('local_path', help='Local destination')
+
+    args = parser.parse_args()

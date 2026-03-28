@@ -121,3 +121,21 @@ if __name__ == '__main__':
     restore_parser.add_argument('local_path', help='Local destination')
 
     args = parser.parse_args()
+backup = S3Backup(args.bucket, args.prefix, args.region)
+    if args.command == 'upload':
+        if os.path.isfile(args.path):
+            backup.upload_file(args.path, compress=args.compress)
+        elif os.path.isdir(args.path):
+            backup.upload_directory(args.path, compress=args.compress)
+        else:
+            print(f"❌ Invalid path: {args.path}")
+    elif args.command == 'list':
+        backups = backup.list_backups()
+        print(f"Backups in s3://{args.bucket}/{args.prefix}:")
+        for b in backups:
+            print(f"  {b['Key']} ({b['Size']} bytes, {b['LastModified']})")
+    elif args.command == 'cleanup':
+        deleted = backup.delete_old_backups(args.days)
+        print(f"Deleted {len(deleted)} old backups")
+    elif args.command == 'restore':
+        backup.restore_file(args.s3_key, args.local_path)

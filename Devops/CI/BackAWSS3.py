@@ -87,3 +87,13 @@ class S3Backup:
                 deleted.append(backup['Key'])
                 self.logger.info(f"Deleted old backup: {backup['Key']}")
         return deleted
+    
+    def restore_file(self, s3_key, local_path):
+        """Download a file from S3"""
+        try:
+            self.s3.download_file(self.bucket, s3_key, local_path)
+            self.logger.info(f"✅ Restored s3://{self.bucket}/{s3_key} to {local_path}")
+            return True
+        except Exception as e:
+            self.logger.error(f"Restore failed: {e}")
+            return False

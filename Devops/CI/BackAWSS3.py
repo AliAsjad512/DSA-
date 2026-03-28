@@ -74,3 +74,16 @@ class S3Backup:
                 'LastModified': obj['LastModified']
             })
         return backups
+    
+
+     def delete_old_backups(self, days=30):
+        """Delete backups older than N days"""
+        cutoff = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(days=days)
+        backups = self.list_backups()
+        deleted = []
+        for backup in backups:
+            if backup['LastModified'] < cutoff:
+                self.s3.delete_object(Bucket=self.bucket, Key=backup['Key'])
+                deleted.append(backup['Key'])
+                self.logger.info(f"Deleted old backup: {backup['Key']}")
+        return deleted

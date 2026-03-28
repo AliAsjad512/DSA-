@@ -43,3 +43,19 @@ class S3Backup:
         except Exception as e:
             self.logger.error(f"Upload failed: {e}")
             return False
+         def upload_directory(self, directory, compress=False):
+        """Upload entire directory recursively"""
+        directory = Path(directory)
+        if not directory.is_dir():
+            self.logger.error(f"{directory} is not a directory")
+            return False
+
+        success = True
+        for root, dirs, files in os.walk(directory):
+            for file in files:
+                file_path = Path(root) / file
+                rel_path = file_path.relative_to(directory)
+                s3_key = f"{self.prefix}{rel_path}"
+                if not self.upload_file(file_path, str(s3_key), compress):
+                    success = False
+        return success

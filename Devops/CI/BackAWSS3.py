@@ -97,3 +97,15 @@ class S3Backup:
         except Exception as e:
             self.logger.error(f"Restore failed: {e}")
             return False
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='S3 Backup Manager')
+    parser.add_argument('--bucket', required=True, help='S3 bucket')
+    parser.add_argument('--prefix', default='backups/', help='S3 prefix')
+    parser.add_argument('--region', default='us-east-1', help='AWS region')
+    subparsers = parser.add_subparsers(dest='command', required=True)
+
+    # Upload
+    upload_parser = subparsers.add_parser('upload')
+    upload_parser.add_argument('path', help='File or directory to upload')
+    upload_parser.add_argument('--compress', action='store_true', help='Compress before upload')

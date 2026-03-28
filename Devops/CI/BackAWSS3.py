@@ -59,3 +59,18 @@ class S3Backup:
                 if not self.upload_file(file_path, str(s3_key), compress):
                     success = False
         return success
+    
+    def list_backups(self):
+        """List all backups in the bucket prefix"""
+        response = self.s3.list_objects_v2(Bucket=self.bucket, Prefix=self.prefix)
+        if 'Contents' not in response:
+            print("No backups found")
+            return []
+        backups = []
+        for obj in response['Contents']:
+            backups.append({
+                'Key': obj['Key'],
+                'Size': obj['Size'],
+                'LastModified': obj['LastModified']
+            })
+        return backups

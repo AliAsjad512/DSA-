@@ -37,3 +37,17 @@ class DockerImageScanner:
             return json.loads(result.stdout)
         except:
             return None
+        
+        def extract_layers(self):
+        """Extract image layers and inspect content (simple)"""
+        try:
+            result = subprocess.run(
+                ['docker', 'history', self.image_name, '--format', '{{.CreatedBy}}'],
+                capture_output=True,
+                text=True,
+                check=True
+            )
+            layers = [line.strip() for line in result.stdout.split('\n') if line.strip()]
+            return layers
+        except:
+            return []

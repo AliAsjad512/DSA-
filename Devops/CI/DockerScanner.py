@@ -51,3 +51,23 @@ class DockerImageScanner:
             return layers
         except:
             return []
+        
+        def generate_report(self):
+        """Generate security report"""
+        report = {
+            'image': self.image_name,
+            'vulnerabilities': []
+        }
+        trivy_report = self.scan_with_trivy()
+        if trivy_report:
+            for result in trivy_report.get('Results', []):
+                for vuln in result.get('Vulnerabilities', []):
+                    report['vulnerabilities'].append({
+                        'title': vuln.get('Title'),
+                        'severity': vuln.get('Severity'),
+                        'package': vuln.get('PkgName'),
+                        'installed_version': vuln.get('InstalledVersion'),
+                        'fixed_version': vuln.get('FixedVersion'),
+                        'description': vuln.get('Description')
+                    })
+        return report

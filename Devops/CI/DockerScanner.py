@@ -71,3 +71,17 @@ class DockerImageScanner:
                         'description': vuln.get('Description')
                     })
         return report
+    
+    if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Docker Image Scanner')
+    parser.add_argument('image', help='Docker image name')
+    parser.add_argument('--output', help='Output JSON file')
+    args = parser.parse_args()
+
+    scanner = DockerImageScanner(args.image)
+    report = scanner.generate_report()
+
+    print(f"🔍 Security scan for {args.image}")
+    print("=" * 60)
+    print(f"Vulnerabilities found: {len(report['vulnerabilities'])}")
+    # Group by severity

@@ -24,3 +24,16 @@ class DockerImageScanner:
         except subprocess.CalledProcessError as e:
             print(f"Trivy scan failed: {e.stderr}")
             return None
+        
+        def scan_with_docker_scan(self):
+        """Use Docker Scan (Snyk)"""
+        try:
+            result = subprocess.run(
+                ['docker', 'scan', self.image_name, '--json'],
+                capture_output=True,
+                text=True,
+                check=True
+            )
+            return json.loads(result.stdout)
+        except:
+            return None

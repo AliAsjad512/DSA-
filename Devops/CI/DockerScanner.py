@@ -85,3 +85,13 @@ class DockerImageScanner:
     print("=" * 60)
     print(f"Vulnerabilities found: {len(report['vulnerabilities'])}")
     # Group by severity
+    sev_count = {}
+    for vuln in report['vulnerabilities']:
+        sev = vuln['severity']
+        sev_count[sev] = sev_count.get(sev, 0) + 1
+    print("Severity breakdown:", sev_count)
+
+    if args.output:
+        with open(args.output, 'w') as f:
+            json.dump(report, f, indent=2)
+        print(f"✅ Report saved to {args.output}")

@@ -45,4 +45,34 @@ class AWSCostOptimizer:
                             'Name': [tag['Value'] for tag in instance.get('Tags', []) if tag['Key'] == 'Name']
                         })
         return idle
+    
+     def find_unused_elbs(self):
+        """Find load balancers with no traffic"""
+        elbs = self.elb.describe_load_balancers()['LoadBalancers']
+        unused = []
+        for lb in elbs:
+            arn = lb['LoadBalancerArn']
+            # Check request count
+            end = datetime.datetime.utcnow()
+            start = end - datetime.timedelta(days=7)
+            try:
+                response = self.cw.get_metric_statistics(
+                    Namespace='AWS/ApplicationELB',
+                    MetricName='RequestCount',
+                    Dimensions=[{'Name': 'LoadBalancer', 'Value': arn.split('/')[-1]}],
+                    StartTime=start,
+                    EndTime=end,
+                    Period=3600,
+                    Statistics=['Sum']
+                )
+                total_requests = sum(dp['Sum'] for dp in response['Datapoints']) if response['Datapoints'] else 0
+                if total_requests == 0:
+                    unused.append({
+                        'LoadBalancerName': lb['LoadBalancerName'],
+                        'DNSName': lb['DNSName'],
+                        'State': lb['State']['Code']
+                    })
+            except:
+                pass
+        return unused
         

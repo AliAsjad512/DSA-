@@ -75,4 +75,34 @@ class AWSCostOptimizer:
             except:
                 pass
         return unused
+    
+    def find_idle_rds_instances(self, days=30):
+        """Find RDS instances with low connection count"""
+        instances = self.rds.describe_db_instances()['DBInstances']
+        idle = []
+        for db in instances:
+            if db['DBInstanceStatus'] != 'available':
+                continue
+            # Get database connections metric
+            end = datetime.datetime.utcnow()
+            start = end - datetime.timedelta(days=days)
+            response = self.cw.get_metric_statistics(
+                Namespace='AWS/RDS',
+                MetricName='DatabaseConnections',
+                Dimensions=[{'Name': 'DBInstanceIdentifier', 'Value': db['DBInstanceIdentifier']}],
+                StartTime=start,
+                EndTime=end,
+                Period=86400,
+                Statistics=['Average']
+            )
+            if response['Datapoints']:
+                avg_conn = sum(dp['Average'] for dp in response['Datapoints']) / len(response['Datapoints'])
+                if avg_conn < 1:
+                    idle.append({
+                        'DBInstanceIdentifier': db['DBInstanceIdentifier'],
+                        'Engine': db['Engine'],
+                        'InstanceClass': db['DBInstanceClass'],
+                        'AvgConnections': round(avg_conn, 2)
+                    })
+        return idle
         

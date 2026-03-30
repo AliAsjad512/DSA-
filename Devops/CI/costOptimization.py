@@ -105,4 +105,14 @@ class AWSCostOptimizer:
                         'AvgConnections': round(avg_conn, 2)
                     })
         return idle
+    
+     def generate_report(self):
+        """Generate cost optimization report"""
+        report = {
+            'idle_ec2_instances': self.find_idle_ec2_instances(),
+            'unused_elbs': self.find_unused_elbs(),
+            'idle_rds_instances': self.find_idle_rds_instances(),
+            'generated_at': datetime.datetime.now().isoformat()
+        }
+        return report
         

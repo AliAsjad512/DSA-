@@ -115,4 +115,30 @@ class AWSCostOptimizer:
             'generated_at': datetime.datetime.now().isoformat()
         }
         return report
+    
+    if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='AWS Cost Optimization')
+    parser.add_argument('--region', default='us-east-1', help='AWS region')
+    parser.add_argument('--output', help='Output JSON file')
+    args = parser.parse_args()
+
+    optimizer = AWSCostOptimizer(args.region)
+    report = optimizer.generate_report()
+
+    print("💰 AWS Cost Optimization Report")
+    print("=" * 50)
+    print(f"Idle EC2 instances: {len(report['idle_ec2_instances'])}")
+    for i in report['idle_ec2_instances']:
+        print(f"  - {i['InstanceId']} ({i['InstanceType']}) avg CPU {i['AverageCPU']}%")
+    print(f"Unused load balancers: {len(report['unused_elbs'])}")
+    for lb in report['unused_elbs']:
+        print(f"  - {lb['LoadBalancerName']} ({lb['DNSName']})")
+    print(f"Idle RDS instances: {len(report['idle_rds_instances'])}")
+    for rds in report['idle_rds_instances']:
+        print(f"  - {rds['DBInstanceIdentifier']} ({rds['InstanceClass']}) avg connections {rds['AvgConnections']}")
+
+    if args.output:
+        with open(args.output, 'w') as f:
+            json.dump(report, f, indent=2, default=str)
+        print(f"\n✅ Report saved to {args.output}")
         

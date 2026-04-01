@@ -33,3 +33,8 @@ class GitAutomation:
         os.chdir(self.repo_path)
         subprocess.run(['git', 'push', remote, branch], check=True)
         print(f"✅ Pushed to {remote}/{branch}")
+    def pull(self, remote='origin', branch='main'):
+        """Pull latest changes"""
+        os.chdir(self.repo_path)
+        subprocess.run(['git', 'pull', remote, branch], check=True)
+        print(f"✅ Pulled latest from {remote}/{branch}")

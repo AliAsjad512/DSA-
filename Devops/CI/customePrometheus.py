@@ -43,3 +43,12 @@ class MetricsExporter:
                 time.sleep(1)
         except KeyboardInterrupt:
             print("\n🛑 Shutting down")
+
+            if __name__ == '__main__':
+    import argparse
+    parser = argparse.ArgumentParser(description='Prometheus Metrics Exporter')
+    parser.add_argument('--port', type=int, default=8000, help='Port to expose metrics')
+    args = parser.parse_args()
+
+    exporter = MetricsExporter(port=args.port)
+    exporter.start()

@@ -38,3 +38,12 @@ class GitAutomation:
         os.chdir(self.repo_path)
         subprocess.run(['git', 'pull', remote, branch], check=True)
         print(f"✅ Pulled latest from {remote}/{branch}")
+
+    def tag(self, tag_name, message=None):
+        """Create a tag"""
+        os.chdir(self.repo_path)
+        cmd = ['git', 'tag', tag_name]
+        if message:
+            cmd = ['git', 'tag', '-a', tag_name, '-m', message]
+        subprocess.run(cmd, check=True)
+        print(f"✅ Created tag {tag_name}")

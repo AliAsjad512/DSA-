@@ -47,3 +47,8 @@ class GitAutomation:
             cmd = ['git', 'tag', '-a', tag_name, '-m', message]
         subprocess.run(cmd, check=True)
         print(f"✅ Created tag {tag_name}")
+    def push_tags(self):
+        """Push tags to remote"""
+        os.chdir(self.repo_path)
+        subprocess.run(['git', 'push', '--tags'], check=True)
+        print("✅ Tags pushed")

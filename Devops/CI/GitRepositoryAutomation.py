@@ -28,3 +28,8 @@ class GitAutomation:
             subprocess.run(['git', 'add', '.'], check=True)
         subprocess.run(['git', 'commit', '-m', message], check=True)
         print(f"✅ Committed with message: {message}")
+    def push(self, remote='origin', branch='main'):
+        """Push changes"""
+        os.chdir(self.repo_path)
+        subprocess.run(['git', 'push', remote, branch], check=True)
+        print(f"✅ Pushed to {remote}/{branch}")

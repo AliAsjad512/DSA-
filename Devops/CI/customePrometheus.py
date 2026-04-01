@@ -19,3 +19,11 @@ class MetricsExporter:
             self.cpu_usage.set(psutil.cpu_percent())
             self.memory_usage.set(psutil.virtual_memory().percent)
             time.sleep(15)
+
+        def simulate_http_traffic(self):
+        """Simulate HTTP requests to test metrics"""
+        while True:
+            duration = random.uniform(0.1, 1.5)
+            self.request_duration.observe(duration)
+            self.request_count.inc()
+            time.sleep(random.randint(5, 30))

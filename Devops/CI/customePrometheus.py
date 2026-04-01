@@ -3,3 +3,5 @@ import time
 import random
 import psutil
 import threading
+
+class MetricsExporter:

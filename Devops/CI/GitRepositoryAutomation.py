@@ -58,3 +58,53 @@ class GitAutomation:
         shutil.rmtree(self.repo_path)
         print(f"✅ Deleted {self.repo_path}")
 
+        if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Git Automation')
+    parser.add_argument('--path', help='Repository path', default='.')
+    subparsers = parser.add_subparsers(dest='command', required=True)
+
+    # Clone
+    clone_parser = subparsers.add_parser('clone')
+    clone_parser.add_argument('url', help='Repository URL')
+    clone_parser.add_argument('--branch', default='main')
+
+    # Commit
+    commit_parser = subparsers.add_parser('commit')
+    commit_parser.add_argument('message', help='Commit message')
+    commit_parser.add_argument('--files', nargs='+', help='Files to commit')
+
+    # Push/Pull
+    push_parser = subparsers.add_parser('push')
+    push_parser.add_argument('--remote', default='origin')
+    push_parser.add_argument('--branch', default='main')
+    pull_parser = subparsers.add_parser('pull')
+    pull_parser.add_argument('--remote', default='origin')
+    pull_parser.add_argument('--branch', default='main')
+
+    # Tag
+    tag_parser = subparsers.add_parser('tag')
+    tag_parser.add_argument('tag_name')
+    tag_parser.add_argument('--message')
+
+    # Other
+    subparsers.add_parser('push-tags')
+    subparsers.add_parser('delete')
+
+    args = parser.parse_args()
+
+    git = GitAutomation(args.path)
+    if args.command == 'clone':
+        git.clone(args.url, args.branch)
+    elif args.command == 'commit':
+        git.commit(args.message, args.files)
+    elif args.command == 'push':
+        git.push(args.remote, args.branch)
+    elif args.command == 'pull':
+        git.pull(args.remote, args.branch)
+    elif args.command == 'tag':
+        git.tag(args.tag_name, args.message)
+    elif args.command == 'push-tags':
+        git.push_tags()
+    elif args.command == 'delete':
+        git.delete_repo()
+

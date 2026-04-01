@@ -27,3 +27,19 @@ class MetricsExporter:
             self.request_duration.observe(duration)
             self.request_count.inc()
             time.sleep(random.randint(5, 30))
+
+            def start(self):
+        """Start metrics server"""
+        start_http_server(self.port)
+        print(f"✅ Prometheus metrics available at http://localhost:{self.port}/metrics")
+
+        # Start background collection
+        threading.Thread(target=self.collect_system_metrics, daemon=True).start()
+        threading.Thread(target=self.simulate_http_traffic, daemon=True).start()
+
+        # Keep main thread alive
+        try:
+            while True:
+                time.sleep(1)
+        except KeyboardInterrupt:
+            print("\n🛑 Shutting down")

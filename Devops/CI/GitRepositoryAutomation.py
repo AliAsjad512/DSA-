@@ -15,3 +15,16 @@ class GitAutomation:
             print(f"✅ Cloned {url} to {self.repo_path}")
         except subprocess.CalledProcessError as e:
             print(f"❌ Clone failed: {e}")
+
+    def commit(self, message, files=None):
+        """Commit changes"""
+        if not self.repo_path.exists():
+            print("Repository does not exist")
+            return
+        os.chdir(self.repo_path)
+        if files:
+            subprocess.run(['git', 'add'] + files, check=True)
+        else:
+            subprocess.run(['git', 'add', '.'], check=True)
+        subprocess.run(['git', 'commit', '-m', message], check=True)
+        print(f"✅ Committed with message: {message}")

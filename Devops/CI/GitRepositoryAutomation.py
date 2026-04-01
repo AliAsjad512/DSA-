@@ -52,3 +52,9 @@ class GitAutomation:
         os.chdir(self.repo_path)
         subprocess.run(['git', 'push', '--tags'], check=True)
         print("✅ Tags pushed")
+
+    def delete_repo(self):
+        """Delete local repository"""
+        shutil.rmtree(self.repo_path)
+        print(f"✅ Deleted {self.repo_path}")
+

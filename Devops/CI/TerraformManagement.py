@@ -43,3 +43,17 @@ class TerraformStateManager:
         finally:
             if self.lock_table:
                 self._release_lock()
+     def _acquire_lock(self):
+        """Acquire DynamoDB lock for state file"""
+        try:
+            self.lock_table.put_item(
+                Item={
+                    'LockID': self.key,
+                    'AcquiredAt': datetime.utcnow().isoformat(),
+                    'ExpiresAt': (datetime.utcnow() + timedelta(minutes=15)).isoformat()
+                },
+                ConditionExpression='attribute_not_exists(LockID)'
+            )
+            return True
+        except:
+            return False

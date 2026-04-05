@@ -25,3 +25,21 @@ class TerraformStateManager:
         except Exception as e:
             print(f"❌ Error reading state: {e}")
             return None
+        
+     def put_state(self, state):
+        """Upload state file with locking"""
+        if self.lock_table:
+            # Attempt to acquire lock
+            if not self._acquire_lock():
+                raise Exception("Failed to acquire lock, another process is using state")
+        try:
+            self.s3.put_object(
+                Bucket=self.bucket,
+                Key=self.key,
+                Body=json.dumps(state, indent=2),
+                ContentType='application/json'
+            )
+            print("✅ State saved successfully")
+        finally:
+            if self.lock_table:
+                self._release_lock()

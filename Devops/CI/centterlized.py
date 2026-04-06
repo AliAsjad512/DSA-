@@ -18,3 +18,10 @@ class LogForwarder(FileSystemEventHandler):
         self.file_handles = {}
         self.file_positions = {}
         self._init_tracking()
+
+         def _init_tracking(self):
+        for log_file in self.log_files:
+            if os.path.exists(log_file):
+                self.file_handles[log_file] = open(log_file, 'r')
+                self.file_positions[log_file] = os.path.getsize(log_file)
+                self.file_handles[log_file].seek(self.file_positions[log_file])

@@ -29,3 +29,19 @@ class LogForwarder(FileSystemEventHandler):
         def on_modified(self, event):
         if not event.is_directory and event.src_path in self.log_files:
             self._read_new_lines(event.src_path)
+
+     def _read_new_lines(self, filepath):
+        f = self.file_handles.get(filepath)
+        if not f:
+            return
+        lines = f.readlines()
+        if lines:
+            for line in lines:
+                self.log_queue.put({
+                    'source': filepath,
+                    'line': line.strip(),
+                    'timestamp': datetime.utcnow().isoformat(),
+                    'host': socket.gethostname()
+                })
+            self.file_positions[filepath] = f.tell()
+

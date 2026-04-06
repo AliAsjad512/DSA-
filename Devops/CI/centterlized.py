@@ -45,3 +45,23 @@ class LogForwarder(FileSystemEventHandler):
                 })
             self.file_positions[filepath] = f.tell()
 
+
+               def run_initial_read(self):
+        for filepath in self.log_files:
+            self._read_new_lines(filepath)
+
+class LogProcessor:
+    def __init__(self, output_type='stdout', **kwargs):
+        self.output_type = output_type
+        self.kwargs = kwargs
+
+    def process(self, log_entry):
+        if self.output_type == 'stdout':
+            print(json.dumps(log_entry))
+        elif self.output_type == 'elasticsearch':
+            self._send_to_elasticsearch(log_entry)
+        elif self.output_type == 'syslog':
+            self._send_to_syslog(log_entry)
+        elif self.output_type == 'file':
+            self._write_to_file(log_entr
+

@@ -25,3 +25,7 @@ class LogForwarder(FileSystemEventHandler):
                 self.file_handles[log_file] = open(log_file, 'r')
                 self.file_positions[log_file] = os.path.getsize(log_file)
                 self.file_handles[log_file].seek(self.file_positions[log_file])
+
+        def on_modified(self, event):
+        if not event.is_directory and event.src_path in self.log_files:
+            self._read_new_lines(event.src_path)

@@ -21,3 +21,18 @@ import subprocess
             return pymysql.connect(host=host, port=port, user=user, password=password, database=database)
         else:
             raise ValueError(f"Unsupported db_type: {self.db_type}")
+        
+
+         def get_slow_queries_postgres(self, threshold_seconds=1):
+        """Get slow queries from PostgreSQL pg_stat_statements"""
+        cursor = self.conn.cursor()
+        query = """
+        SELECT query, mean_time, calls, total_time, max_time
+        FROM pg_stat_statements
+        WHERE mean_time > %s
+        ORDER BY mean_time DESC
+        LIMIT 10
+        """
+        cursor.execute(query, (threshold_seconds * 1000,))  # mean_time is in ms
+        results = cursor.fetchall()
+        return [{'query': r[0][:200], 'mean_time_ms': round(r[1], 2), 'calls': r[2], 'total_time_ms': round(r[3], 2)} for r in results]

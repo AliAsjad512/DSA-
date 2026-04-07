@@ -36,3 +36,15 @@ import subprocess
         cursor.execute(query, (threshold_seconds * 1000,))  # mean_time is in ms
         results = cursor.fetchall()
         return [{'query': r[0][:200], 'mean_time_ms': round(r[1], 2), 'calls': r[2], 'total_time_ms': round(r[3], 2)} for r in results]
+def get_slow_queries_mysql(self, threshold_seconds=1):
+        """Get slow queries from MySQL slow log (requires slow log enabled)"""
+        cursor = self.conn.cursor()
+        # Check if slow query log is on
+        cursor.execute("SHOW VARIABLES LIKE 'slow_query_log'")
+        slow_log_on = cursor.fetchone()
+        if slow_log_on and slow_log_on[1] == 'ON':
+            cursor.execute(f"SELECT sql_text, query_time, lock_time, rows_examined FROM mysql.slow_log WHERE query_time > {threshold_seconds} ORDER BY query_time DESC LIMIT 10")
+            results = cursor.fetchall()
+            return [{'query': r[0][:200], 'query_time': float(r[1]), 'lock_time': float(r[2]), 'rows_examined': r[3]} for r in results]
+        else:
+            return [{'error': 'Slow query log not enabled'}]

@@ -48,3 +48,41 @@ def get_slow_queries_mysql(self, threshold_seconds=1):
             return [{'query': r[0][:200], 'query_time': float(r[1]), 'lock_time': float(r[2]), 'rows_examined': r[3]} for r in results]
         else:
             return [{'error': 'Slow query log not enabled'}]
+        
+
+        def get_connection_stats(self):
+        """Get current connection count"""
+        cursor = self.conn.cursor()
+        if self.db_type == 'postgres':
+            cursor.execute("SELECT count(*) FROM pg_stat_activity")
+        else:
+            cursor.execute("SHOW STATUS LIKE 'Threads_connected'")
+        return cursor.fetchone()[0]
+
+    def get_database_size(self):
+        """Get database size"""
+        cursor = self.conn.cursor()
+        if self.db_type == 'postgres':
+            cursor.execute("SELECT pg_database_size(current_database())")
+            return cursor.fetchone()[0] / (1024**3)  # GB
+        else:
+            cursor.execute("SELECT SUM(data_length + index_length) FROM information_schema.tables WHERE table_schema = DATABASE()")
+            return cursor.fetchone()[0] / (1024**3) if cursor.fetchone()[0] else 0
+
+    def monitor_loop(self, interval=60, slow_threshold=1):
+        """Continuous monitoring"""
+        self.logger.info(f"Starting DB monitor for {self.db_type}, interval={interval}s")
+        while True:
+            try:
+                slow_queries = self.get_slow_queries_postgres(threshold_seconds=slow_threshold) if self.db_type == 'postgres' else self.get_slow_queries_mysql(slow_threshold)
+                conn_count = self.get_connection_stats()
+                db_size = self.get_database_size()
+                self.logger.info(f"Connections: {conn_count}, DB Size: {db_size:.2f} GB, Slow queries: {len(slow_queries)}")
+                if slow_queries:
+                    self.logger.warning(f"Slow queries found: {slow_queries[:3]}")
+                time.sleep(interval)
+            except KeyboardInterrupt:
+                break
+            except Exception as e:
+                self.logger.error(f"Monitor error: {e}")
+                time.sleep(interval)

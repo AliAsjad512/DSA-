@@ -58,3 +58,21 @@ class IaCValidator:
             return self.validate_terraform()
         else:
             return {'valid': False, 'message': f'Unknown template type: {type_}'}
+        
+    if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='IaC Validator')
+    parser.add_argument('template', help='Path to template file or directory')
+    parser.add_argument('--type', choices=['auto', 'cloudformation', 'terraform'], default='auto')
+    args = parser.parse_args()
+
+    validator = IaCValidator(args.template)
+    result = validator.validate(args.type)
+    if result['valid']:
+        print(f"✅ Template is valid")
+        if result.get('message'):
+            print(result['message'])
+        sys.exit(0)
+    else:
+        print(f"❌ Template validation failed:")
+        print(result['message'])
+        sys.exit(1)

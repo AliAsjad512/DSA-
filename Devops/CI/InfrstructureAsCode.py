@@ -36,3 +36,17 @@ class IaCValidator:
                     return {'valid': False, 'message': result.stdout + result.stderr}
             except:
                 return {'valid': False, 'message': 'AWS CLI not found and cfn-lint not installed'}
+    def validate_terraform(self):
+        """Validate Terraform configuration"""
+        # Terraform expects to be run in a directory with .tf files
+        tf_dir = self.template_path if self.template_path.is_dir() else self.template_path.parent
+        try:
+            # terraform init first (quiet)
+            subprocess.run(['terraform', 'init', '-backend=false'], cwd=tf_dir, capture_output=True, check=True)
+            # terraform validate
+            result = subprocess.run(['terraform', 'validate', '-no-color'], cwd=tf_dir, capture_output=True, text=True, check=True)
+            return {'valid': True, 'message': result.stdout}
+        except subprocess.CalledProcessError as e:
+            return {'valid': False, 'message': e.stderr}
+        except FileNotFoundError:
+            return {'valid': False, 'message': 'Terraform not installed'}

@@ -50,3 +50,11 @@ class IaCValidator:
             return {'valid': False, 'message': e.stderr}
         except FileNotFoundError:
             return {'valid': False, 'message': 'Terraform not installed'}
+    def validate(self, type_='auto'):
+        """Auto-detect template type"""
+        if type_ == 'cloudformation' or (type_ == 'auto' and self.template_path.suffix in ['.yaml', '.yml', '.json']):
+            return self.validate_cloudformation()
+        elif type_ == 'terraform' or (type_ == 'auto' and self.template_path.suffix == '.tf'):
+            return self.validate_terraform()
+        else:
+            return {'valid': False, 'message': f'Unknown template type: {type_}'}

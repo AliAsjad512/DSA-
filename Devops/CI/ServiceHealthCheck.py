@@ -25,3 +25,15 @@ def setup_logging(self):
             ]
         )
         self.logger = logging.getLogger(self.service_name)
+
+
+        def check_process(self, process_name=None):
+        """Check if process is running"""
+        name = process_name or self.service_name
+        try:
+            result = subprocess.run(['pgrep', '-f', name], capture_output=True, text=True)
+            if result.returncode == 0:
+                return True, result.stdout.strip()
+            return False, None
+        except Exception as e:
+            return False, str(e)

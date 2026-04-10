@@ -83,3 +83,72 @@ def setup_logging(self):
                 pass
         self.logger.error("❌ Failed to restart service")
         return False
+
+
+ def monitor(self, check_type='process', **kwargs):
+        """Main monitoring loop"""
+        self.logger.info(f"Starting monitor for {self.service_name} (interval={self.check_interval}s)")
+
+        while True:
+            if check_type == 'process':
+                alive, details = self.check_process(kwargs.get('process_name'))
+            elif check_type == 'http':
+                alive, details = self.check_http(kwargs['url'], kwargs.get('expected_status', 200))
+            elif check_type == 'tcp':
+                alive, details = self.check_tcp_port(kwargs['host'], kwargs['port'])
+            else:
+                self.logger.error(f"Unknown check type: {check_type}")
+                return
+
+            if alive:
+                if self.failure_count > 0:
+                    self.logger.info(f"Service recovered after {self.failure_count} failures")
+                self.failure_count = 0
+                self.logger.debug(f"Service {self.service_name} is healthy ({details})")
+            else:
+                self.failure_count += 1
+                self.logger.warning(f"Service unhealthy (failure {self.failure_count}/{self.max_failures}): {details}")
+                if self.failure_count >= self.max_failures:
+                    self.logger.warning(f"⚠️ Restarting {self.service_name}...")
+                    if self.restart_service(kwargs.get('restart_cmd')):
+                        self.failure_count = 0
+                        time.sleep(5)  # Wait for service to stabilize
+                    else:
+                        self.logger.critical(f"Failed to restart {self.service_name}")
+                        # Send alert
+                        self.send_alert()
+
+            time.sleep(self.check_interval)
+
+    def send_alert(self):
+        """Send alert (Slack, email, etc.)"""
+        # Implement as needed
+        print(f"🔔 ALERT: {self.service_name} failed to restart!")
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Service Health Monitor')
+    parser.add_argument('service', help='Service name')
+    parser.add_argument('--check-type', choices=['process', 'http', 'tcp'], default='process')
+    parser.add_argument('--interval', type=int, default=30, help='Check interval (seconds)')
+    parser.add_argument('--max-failures', type=int, default=3, help='Failures before restart')
+    parser.add_argument('--process-name', help='Process name to match (default: service name)')
+    parser.add_argument('--url', help='HTTP URL to check')
+    parser.add_argument('--host', help='TCP host')
+    parser.add_argument('--port', type=int, help='TCP port')
+    parser.add_argument('--restart-cmd', help='Custom restart command')
+    args = parser.parse_args()
+
+    monitor = ServiceHealthMonitor(args.service, args.interval, args.max_failures)
+    kwargs = {}
+    if args.process_name:
+        kwargs['process_name'] = args.process_name
+    if args.url:
+        kwargs['url'] = args.url
+    if args.host and args.port:
+        kwargs['host'] = args.host
+        kwargs['port'] = args.port
+    if args.restart_cmd:
+        kwargs['restart_cmd'] = args.restart_cmd
+
+    monitor.monitor(check_type=args.check_type, **kwargs)

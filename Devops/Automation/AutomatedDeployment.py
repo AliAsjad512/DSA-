@@ -153,3 +153,18 @@ class DeploymentManager:
                 print("❌ No previous release to rollback to")
 
 
+  if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Zero-downtime deployment')
+    parser.add_argument('--app', required=True, help='Application name')
+    parser.add_argument('--action', choices=['deploy', 'rollback'], required=True)
+    parser.add_argument('--source', help='Git URL or source directory')
+    parser.add_argument('--version', help='Version tag')
+    parser.add_argument('--health-check', help='Health check URL')
+    parser.add_argument('--deploy-dir', default='/tmp/deploy_demo')
+    args = parser.parse_args()
+
+    dm = DeploymentManager(args.app, deploy_dir=args.deploy_dir)
+    if args.action == 'deploy':
+        dm.deploy(args.source, args.version, args.health_check)
+    else:
+        dm.rollback()

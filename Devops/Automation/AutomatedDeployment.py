@@ -130,3 +130,26 @@ class DeploymentManager:
 
         print(f"✅ Deployment of {release_name} successful")
         return True
+   def rollback(self, backup_path=None):
+        """Rollback to previous version"""
+        if backup_path:
+            # Restore from backup
+            backup_path = Path(backup_path)
+            rollback_name = f"rollback_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+            rollback_path = self.releases_dir / rollback_name
+            shutil.copytree(backup_path, rollback_path)
+            self.current_symlink.unlink()
+            self.current_symlink.symlink_to(rollback_path)
+            print(f"✅ Rolled back to {backup_path.name}")
+        else:
+            # Use previous release
+            releases = sorted(self.releases_dir.iterdir(), key=os.path.getmtime)
+            if len(releases) >= 2:
+                prev_release = releases[-2]
+                self.current_symlink.unlink()
+                self.current_symlink.symlink_to(prev_release)
+                print(f"✅ Rolled back to {prev_release.name}")
+            else:
+                print("❌ No previous release to rollback to")
+
+

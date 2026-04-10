@@ -59,3 +59,27 @@ def setup_logging(self):
             return result == 0, result
         except Exception as e:
             return False, str(e)
+        
+
+        def restart_service(self, restart_cmd=None):
+        """Restart the service"""
+        if not restart_cmd:
+            # Try common service managers
+            for cmd in [f'systemctl restart {self.service_name}',
+                        f'service {self.service_name} restart',
+                        f'supervisorctl restart {self.service_name}']:
+                try:
+                    subprocess.run(cmd.split(), check=True, capture_output=True)
+                    self.logger.info(f"✅ Restarted service using: {cmd}")
+                    return True
+                except:
+                    continue
+        else:
+            try:
+                subprocess.run(restart_cmd.split(), check=True)
+                self.logger.info(f"✅ Restarted service using: {restart_cmd}")
+                return True
+            except:
+                pass
+        self.logger.error("❌ Failed to restart service")
+        return False

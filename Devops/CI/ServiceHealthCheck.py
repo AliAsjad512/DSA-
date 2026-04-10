@@ -48,3 +48,14 @@ def setup_logging(self):
             return False, resp.status_code
         except Exception as e:
             return False, str(e)
+        
+        def check_tcp_port(self, host, port):
+        """Check TCP port connectivity"""
+        try:
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.settimeout(3)
+            result = sock.connect_ex((host, port))
+            sock.close()
+            return result == 0, result
+        except Exception as e:
+            return False, str(e)

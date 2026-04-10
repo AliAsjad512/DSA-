@@ -16,3 +16,13 @@ class DeploymentManager:
         self.releases_dir = self.deploy_dir / 'releases'
         self.backup_dir.mkdir(parents=True, exist_ok=True)
         self.releases_dir.mkdir(parents=True, exist_ok=True)
+
+     def create_backup(self):
+        """Backup current release if exists"""
+        if self.current_symlink.exists() and self.current_symlink.is_symlink():
+            version = os.path.basename(os.readlink(self.current_symlink))
+            backup_path = self.backup_dir / f"{version}_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+            shutil.copytree(self.current_symlink, backup_path)
+            print(f"✅ Backup created at {backup_path}")
+            return str(backup_path)
+        return None

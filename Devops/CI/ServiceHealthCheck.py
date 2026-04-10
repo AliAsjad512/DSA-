@@ -15,3 +15,13 @@ class ServiceHealthMonitor:
         self.max_failures = max_failures
         self.failure_count = 0
         self.setup_logging()
+def setup_logging(self):
+        logging.basicConfig(
+            level=logging.INFO,
+            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+            handlers=[
+                logging.FileHandler(f'/var/log/{self.service_name}_monitor.log'),
+                logging.StreamHandler()
+            ]
+        )
+        self.logger = logging.getLogger(self.service_name)

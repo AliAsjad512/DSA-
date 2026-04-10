@@ -37,3 +37,14 @@ def setup_logging(self):
             return False, None
         except Exception as e:
             return False, str(e)
+        
+
+         def check_http(self, url, expected_status=200, timeout=5):
+        """Check HTTP endpoint"""
+        try:
+            resp = requests.get(url, timeout=timeout)
+            if resp.status_code == expected_status:
+                return True, resp.status_code
+            return False, resp.status_code
+        except Exception as e:
+            return False, str(e)

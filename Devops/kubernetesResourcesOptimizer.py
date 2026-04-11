@@ -86,3 +86,23 @@ class K8sResourceOptimizer:
         if value.endswith('Gi'):
             return float(value[:-2]) * 1024
         return float(value) / (1024**2) if value != '0' else 0
+    
+    if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='K8s Resource Optimizer')
+    parser.add_argument('--namespace', default='default')
+    args = parser.parse_args()
+
+    optimizer = K8sResourceOptimizer(args.namespace)
+    recommendations = optimizer.analyze()
+    if recommendations:
+        print(f"📊 Resource Optimization Recommendations for namespace '{args.namespace}':")
+        for rec in recommendations:
+            print(f"\n🔹 {rec['pod']}/{rec['container']}")
+            for issue in rec['issues']:
+                print(f"   - {issue}")
+            print(f"   💡 Suggested CPU request: {rec['suggested_cpu_request']:.2f}c")
+            print(f"   💡 Suggested Memory request: {rec['suggested_memory_request']:.0f}Mi")
+    else:
+        print("✅ No resource optimization needed")
+
+        

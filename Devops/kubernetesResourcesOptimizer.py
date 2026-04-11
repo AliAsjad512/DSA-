@@ -30,3 +30,44 @@ class K8sResourceOptimizer:
                     'memory_limit': lim.get('memory', '0')
                 })
         return results
+    
+    def analyze(self):
+        """Compare requests/limits vs actual usage"""
+        resources = self.get_pod_resources()
+        metrics = self.get_pod_metrics()
+        recommendations = []
+
+        for res in resources:
+            key = f"{res['pod']}/{res['container']}"
+            actual = metrics.get(key, {})
+            if not actual:
+                continue
+
+            # Parse CPU values (e.g., "100m" -> 0.1)
+            cpu_req = self._parse_cpu(res['cpu_request'])
+            cpu_lim = self._parse_cpu(res['cpu_limit'])
+            cpu_act = self._parse_cpu(actual.get('cpu', '0'))
+            mem_req = self._parse_memory(res['memory_request'])
+            mem_lim = self._parse_memory(res['memory_limit'])
+            mem_act = self._parse_memory(actual.get('memory', '0'))
+
+            issues = []
+            if cpu_req > 0 and cpu_act < cpu_req * 0.3:
+                issues.append(f"CPU request too high: actual {cpu_act:.2f}c vs {cpu_req:.2f}c")
+            if cpu_lim > 0 and cpu_act > cpu_lim * 0.8:
+                issues.append(f"CPU limit too low: actual {cpu_act:.2f}c vs {cpu_lim:.2f}c")
+            if mem_req > 0 and mem_act < mem_req * 0.3:
+                issues.append(f"Memory request too high: actual {mem_act:.0f}Mi vs {mem_req:.0f}Mi")
+            if mem_lim > 0 and mem_act > mem_lim * 0.8:
+                issues.append(f"Memory limit too low: actual {mem_act:.0f}Mi vs {mem_lim:.0f}Mi")
+
+            if issues:
+                recommendations.append({
+                    'pod': res['pod'],
+                    'container': res['container'],
+                    'issues': issues,
+                    'suggested_cpu_request': max(0.1, cpu_act * 1.2),
+                    'suggested_memory_request': max(128, mem_act * 1.2)
+                })
+
+        return recommendations

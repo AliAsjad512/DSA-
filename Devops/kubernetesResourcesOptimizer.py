@@ -71,3 +71,18 @@ class K8sResourceOptimizer:
                 })
 
         return recommendations
+    @staticmethod
+    def _parse_cpu(value):
+        if value.endswith('m'):
+            return float(value[:-1]) / 1000
+        return float(value) if value != '0' else 0
+
+    @staticmethod
+    def _parse_memory(value):
+        if value.endswith('Ki'):
+            return float(value[:-2]) / 1024
+        if value.endswith('Mi'):
+            return float(value[:-2])
+        if value.endswith('Gi'):
+            return float(value[:-2]) * 1024
+        return float(value) / (1024**2) if value != '0' else 0

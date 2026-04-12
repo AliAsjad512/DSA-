@@ -68,3 +68,24 @@ class CostAnomalyDetector:
         services = daily_data[date]
         sorted_services = sorted(services.items(), key=lambda x: x[1], reverse=True)
         return [{'service': s, 'cost': c} for s, c in sorted_services[:5]]
+    
+     if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='AWS Cost Anomaly Detector')
+    parser.add_argument('--days', type=int, default=30)
+    parser.add_argument('--threshold', type=float, default=2.0)
+    args = parser.parse_args()
+
+    detector = CostAnomalyDetector()
+    anomalies = detector.detect_anomalies(args.days, args.threshold)
+    daily_data = detector.get_daily_costs(args.days)
+
+    if anomalies:
+        print(f"⚠️ Cost Anomalies Detected (last {args.days} days):")
+        for a in anomalies:
+            print(f"\n📅 {a['date']}: ${a['cost']:.2f} (expected ${a['expected']:.2f}, +{a['percentage_increase']}%)")
+            print(f"   Top services that day:")
+            top = detector.get_top_services_for_date(a['date'], daily_data)
+            for svc in top:
+                print(f"     - {svc['service']}: ${svc['cost']:.2f}")
+    else:
+        print("✅ No cost anomalies detected")

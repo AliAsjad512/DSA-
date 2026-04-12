@@ -60,3 +60,11 @@ class CostAnomalyDetector:
                 })
 
         return anomalies
+    
+     def get_top_services_for_date(self, date, daily_data):
+        """Get top cost contributors for a given date"""
+        if date not in daily_data:
+            return []
+        services = daily_data[date]
+        sorted_services = sorted(services.items(), key=lambda x: x[1], reverse=True)
+        return [{'service': s, 'cost': c} for s, c in sorted_services[:5]]

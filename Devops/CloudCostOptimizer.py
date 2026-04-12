@@ -30,3 +30,33 @@ class CostAnomalyDetector:
                 cost = float(group['Metrics']['UnblendedCost']['Amount'])
                 daily_data[date][service] = cost
         return daily_data
+    
+    def detect_anomalies(self, days_back=30, threshold=2.0):
+        """Detect anomalies using z-score (2 standard deviations)"""
+        daily = self.get_daily_costs(days_back)
+        total_by_day = {date: sum(services.values()) for date, services in daily.items()}
+        dates = list(total_by_day.keys())
+        costs = list(total_by_day.values())
+
+        if len(costs) < 7:
+            return []
+
+        # Calculate moving average and std
+        window = 7
+        anomalies = []
+        for i in range(window, len(costs)):
+            window_costs = costs[i-window:i]
+            mean = np.mean(window_costs)
+            std = np.std(window_costs)
+            current = costs[i]
+            z_score = (current - mean) / std if std > 0 else 0
+            if abs(z_score) > threshold and current > mean * 1.5:
+                anomalies.append({
+                    'date': dates[i],
+                    'cost': current,
+                    'expected': mean,
+                    'z_score': round(z_score, 2),
+                    'percentage_increase': round((current - mean) / mean * 100, 1)
+                })
+
+        return anomalies

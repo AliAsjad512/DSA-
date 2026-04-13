@@ -52,3 +52,41 @@ class IncidentResponder:
             return "Notification sent"
         else:
             raise ValueError(f"Unknown step type: {step_type}")
+
+    def run(self, incident_type, dry_run=False):
+        """Execute full runbook"""
+        runbook = self.load_runbook(incident_type)
+        self.logger.info(f"Starting incident response for {incident_type} (dry_run={dry_run})")
+
+        for step in runbook.get('steps', []):
+            try:
+                if dry_run:
+                    self.logger.info(f"[DRY RUN] Would execute: {step.get('name')}")
+                else:
+                    result = self.execute_step(step)
+                    self.logger.debug(f"Step result: {result}")
+            except Exception as e:
+                self.logger.error(f"Step {step.get('name')} failed: {e}")
+                # Execute rollback steps if defined
+                rollback = runbook.get('rollback', [])
+                for rb_step in rollback:
+                    self.logger.warning(f"Executing rollback: {rb_step.get('name')}")
+                    if not dry_run:
+                        self.execute_step(rb_step)
+                raise
+        self.logger.info("Runbook completed successfully")
+
+
+# Example runbook JSON (save as ./runbooks/high_cpu.json)
+
+{
+    "name": "High CPU Incident",
+    "steps": [
+        {"name": "Get top processes", "type": "command", "command": "ps aux --sort=-%cpu | head -10"},
+        {"name": "Restart service", "type": "command", "command": "systemctl restart webapp"},
+        {"name": "Send alert", "type": "webhook", "webhook_url": "https://hooks.slack.com/...", "message": "High CPU resolved"}
+    ],
+    "rollback": [
+        {"name": "Restore previous version", "type": "command", "command": "systemctl start webapp-old"}
+    ]
+}

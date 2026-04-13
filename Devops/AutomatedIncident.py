@@ -90,3 +90,13 @@ class IncidentResponder:
         {"name": "Restore previous version", "type": "command", "command": "systemctl start webapp-old"}
     ]
 }
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Incident Response Runner')
+    parser.add_argument('incident_type', help='Type of incident (e.g., high_cpu)')
+    parser.add_argument('--dry-run', action='store_true', help='Simulate execution')
+    parser.add_argument('--runbook-dir', default='./runbooks')
+    args = parser.parse_args()
+
+    responder = IncidentResponder(args.runbook_dir)
+    responder.run(args.incident_type, args.dry_run)

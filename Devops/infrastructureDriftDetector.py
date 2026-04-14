@@ -23,4 +23,23 @@ class DriftDetector:
                         'attributes': instance['attributes']
                     })
         return resources
+    def get_live_s3_buckets(self):
+        """Fetch actual S3 buckets from AWS"""
+        s3 = boto3.client('s3')
+        buckets = s3.list_buckets()['Buckets']
+        live = {}
+        for bucket in buckets:
+            name = bucket['Name']
+            # Get bucket tags
+            try:
+                tags = s3.get_bucket_tagging(Bucket=name)
+                tag_dict = {t['Key']: t['Value'] for t in tags.get('TagSet', [])}
+            except:
+                tag_dict = {}
+            live[name] = {
+                'name': name,
+                'creation_date': bucket['CreationDate'].isoformat(),
+                'tags': tag_dict
+            }
+        return live
 

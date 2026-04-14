@@ -92,5 +92,22 @@ class DriftDetector:
                     }
 
         return drift_report
+    
+    if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Infrastructure Drift Detector')
+    parser.add_argument('--tfstate', default='terraform.tfstate')
+    args = parser.parse_args()
+
+    detector = DriftDetector(args.tfstate)
+    drift = detector.detect_drift()
+    if drift:
+        print("⚠️ Infrastructure Drift Detected:")
+        for resource, info in drift.items():
+            print(f"  - {resource}: {info['status']}")
+            if 'details' in info:
+                print(f"    {info['details']}")
+    else:
+        print("✅ No drift detected")
+
 
 

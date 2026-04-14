@@ -42,4 +42,19 @@ class DriftDetector:
                 'tags': tag_dict
             }
         return live
+    def get_live_ec2_instances(self):
+        """Fetch actual EC2 instances from AWS"""
+        ec2 = boto3.client('ec2')
+        instances = ec2.describe_instances()
+        live = {}
+        for reservation in instances['Reservations']:
+            for instance in reservation['Instances']:
+                instance_id = instance['InstanceId']
+                live[instance_id] = {
+                    'id': instance_id,
+                    'type': instance['InstanceType'],
+                    'state': instance['State']['Name'],
+                    'tags': {t['Key']: t['Value'] for t in instance.get('Tags', [])}
+                }
+        return live
 

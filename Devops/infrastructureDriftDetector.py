@@ -57,4 +57,40 @@ class DriftDetector:
                     'tags': {t['Key']: t['Value'] for t in instance.get('Tags', [])}
                 }
         return live
+    def detect_drift(self):
+        """Compare TF state with live resources"""
+        drift_report = {}
+
+        # Check S3 buckets
+        tf_buckets = {r['attributes']['bucket']: r['attributes'] for r in self.get_resources_from_tf('aws_s3_bucket')}
+        live_buckets = self.get_live_s3_buckets()
+        for bucket_name, tf_attrs in tf_buckets.items():
+            if bucket_name not in live_buckets:
+                drift_report[f"s3_bucket/{bucket_name}"] = {'status': 'missing', 'details': 'Bucket not found in AWS'}
+            else:
+                # Compare tags
+                tf_tags = tf_attrs.get('tags', {})
+                live_tags = live_buckets[bucket_name]['tags']
+                if tf_tags != live_tags:
+                    drift_report[f"s3_bucket/{bucket_name}"] = {
+                        'status': 'drifted',
+                        'details': f"Tags mismatch: tf={tf_tags}, live={live_tags}"
+                    }
+
+        # Check EC2 instances
+        tf_instances = {r['attributes']['id']: r['attributes'] for r in self.get_resources_from_tf('aws_instance')}
+        live_instances = self.get_live_ec2_instances()
+        for instance_id, tf_attrs in tf_instances.items():
+            if instance_id not in live_instances:
+                drift_report[f"ec2_instance/{instance_id}"] = {'status': 'missing'}
+            else:
+                live = live_instances[instance_id]
+                if tf_attrs.get('instance_type') != live['type']:
+                    drift_report[f"ec2_instance/{instance_id}"] = {
+                        'status': 'drifted',
+                        'details': f"Type mismatch: tf={tf_attrs.get('instance_type')}, live={live['type']}"
+                    }
+
+        return drift_report
+
 

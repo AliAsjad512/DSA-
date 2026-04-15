@@ -65,3 +65,20 @@ class SecretsRotator:
             RotationRules={'AutomaticallyAfterDays': rotation_days}
         )
         self.logger.info(f"Scheduled rotation for {secret_id} every {rotation_days} days")
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Secrets Rotation')
+    parser.add_argument('--action', choices=['rotate-rds', 'rotate-api', 'schedule'], required=True)
+    parser.add_argument('--secret-id', required=True)
+    parser.add_argument('--db-instance', help='RDS instance ID (for rotate-rds)')
+    parser.add_argument('--db-username', help='RDS master username')
+    parser.add_argument('--rotation-days', type=int, default=30)
+    args = parser.parse_args()
+
+    rotator = SecretsRotator()
+    if args.action == 'rotate-rds':
+        rotator.rotate_rds_password(args.db_instance, args.db_username, args.secret_id)
+    elif args.action == 'rotate-api':
+        rotator.rotate_api_key(args.secret_id)
+    elif args.action == 'schedule':
+        rotator.schedule_rotation(args.secret_id, args.rotation_days)

@@ -47,3 +47,13 @@ class SecretsRotator:
         current_secret['rotated_at'] = datetime.utcnow().isoformat()
         self.update_secret(secret_id, current_secret)
         self.logger.info(f"Rotated secret {secret_id} for RDS {db_instance_id}")
+    def rotate_api_key(self, secret_id, new_key_prefix="ak_"):
+        """Rotate generic API key"""
+        new_key = f"{new_key_prefix}{secrets.token_hex(16)}"
+        current = self.get_secret(secret_id)
+        old_key = current.get('api_key')
+        current['api_key'] = new_key
+        current['previous_api_key'] = old_key
+        current['rotated_at'] = datetime.utcnow().isoformat()
+        self.update_secret(secret_id, current)
+        self.logger.info(f"Rotated API key for {secret_id}")

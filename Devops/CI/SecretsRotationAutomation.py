@@ -16,3 +16,7 @@ class SecretsRotator:
         """Generate a strong random password"""
         alphabet = string.ascii_letters + string.digits + "!@#$%^&*()_+"
         return ''.join(secrets.choice(alphabet) for _ in range(length))
+    def get_secret(self, secret_id):
+        """Retrieve current secret value"""
+        response = self.sm.get_secret_value(SecretId=secret_id)
+        return json.loads(response['SecretString'])

@@ -12,3 +12,7 @@ class SecretsRotator:
         self.rds = boto3.client('rds', region_name=region)
         self.logger = logging.getLogger(__name__)
         logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+    def generate_password(self, length=32):
+        """Generate a strong random password"""
+        alphabet = string.ascii_letters + string.digits + "!@#$%^&*()_+"
+        return ''.join(secrets.choice(alphabet) for _ in range(length))

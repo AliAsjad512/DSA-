@@ -20,3 +20,11 @@ class SecretsRotator:
         """Retrieve current secret value"""
         response = self.sm.get_secret_value(SecretId=secret_id)
         return json.loads(response['SecretString'])
+    def update_secret(self, secret_id, secret_value):
+        """Update secret with new value"""
+        self.sm.put_secret_value(
+            SecretId=secret_id,
+            SecretString=json.dumps(secret_value),
+            VersionStages=['AWSCURRENT']
+        )
+        self.logger.info(f"Updated secret {secret_id}")

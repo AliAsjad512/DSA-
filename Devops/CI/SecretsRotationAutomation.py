@@ -57,3 +57,11 @@ class SecretsRotator:
         current['rotated_at'] = datetime.utcnow().isoformat()
         self.update_secret(secret_id, current)
         self.logger.info(f"Rotated API key for {secret_id}")
+    def schedule_rotation(self, secret_id, rotation_days=30):
+        """Schedule automatic rotation using Lambda (requires pre-configured rotation lambda)"""
+        self.sm.rotate_secret(
+            SecretId=secret_id,
+            RotationLambdaARN=f"arn:aws:lambda:us-east-1:123456789012:function:{secret_id}_rotator",
+            RotationRules={'AutomaticallyAfterDays': rotation_days}
+        )
+        self.logger.info(f"Scheduled rotation for {secret_id} every {rotation_days} days")

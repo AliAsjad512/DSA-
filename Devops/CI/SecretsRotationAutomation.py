@@ -28,3 +28,22 @@ class SecretsRotator:
             VersionStages=['AWSCURRENT']
         )
         self.logger.info(f"Updated secret {secret_id}")
+    def rotate_rds_password(self, db_instance_id, username, secret_id):
+        """Rotate RDS master password and update secrets manager"""
+        new_password = self.generate_password()
+        # Update RDS
+        self.rds.modify_db_instance(
+            DBInstanceIdentifier=db_instance_id,
+            MasterUserPassword=new_password,
+            ApplyImmediately=True
+        )
+        self.logger.info(f"Updated RDS {db_instance_id} password")
+        # Wait for modification to complete
+        waiter = self.rds.get_waiter('db_instance_available')
+        waiter.wait(DBInstanceIdentifier=db_instance_id)
+        # Update secret
+        current_secret = self.get_secret(secret_id)
+        current_secret['password'] = new_password
+        current_secret['rotated_at'] = datetime.utcnow().isoformat()
+        self.update_secret(secret_id, current_secret)
+        self.logger.info(f"Rotated secret {secret_id} for RDS {db_instance_id}")

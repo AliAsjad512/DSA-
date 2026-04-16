@@ -44,3 +44,19 @@ class DisasterRecovery:
         """Restore traffic to primary region"""
         self.logger.info(f"🔄 Failing back to primary region {self.primary}")
         return self.failover_to_dr(hosted_zone_id, record_name, primary_endpoint)
+    def run_dr_plan(self, config_file):
+        """Execute DR plan from JSON config"""
+        with open(config_file, 'r') as f:
+            config = json.load(f)
+        primary_healthy = self.check_primary_health(config['health_check_url'])
+        if not primary_healthy and not config.get('force_dr', False):
+            self.logger.critical("Primary unhealthy, initiating DR failover")
+            for record in config['dns_records']:
+                self.failover_to_dr(record['zone_id'], record['name'], record['dr_endpoint'])
+            # Additional steps: start DR instances, update ASG, etc.
+            if config.get('dr_instances'):
+                ec2_dr = boto3.client('ec2', region_name=self.dr)
+                ec2_dr.start_instances(InstanceIds=config['dr_instances'])
+                self.logger.info(f"Started DR instances: {config['dr_instances']}")
+        else:
+            self.logger.info("Primary region healthy, no action needed")

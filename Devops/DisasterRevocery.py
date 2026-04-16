@@ -60,3 +60,13 @@ class DisasterRecovery:
                 self.logger.info(f"Started DR instances: {config['dr_instances']}")
         else:
             self.logger.info("Primary region healthy, no action needed")
+
+    if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='DR Orchestrator')
+    parser.add_argument('--config', required=True, help='DR configuration JSON')
+    parser.add_argument('--primary-region', default='us-east-1')
+    parser.add_argument('--dr-region', default='us-west-2')
+    args = parser.parse_args()
+
+    dr = DisasterRecovery(args.primary_region, args.dr_region)
+    dr.run_dr_plan(args.config)

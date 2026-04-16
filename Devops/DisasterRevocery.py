@@ -39,3 +39,8 @@ class DisasterRecovery:
         )
         self.logger.info(f"✅ Route53 updated: {record_name} -> {dr_endpoint}")
         return response
+    
+     def failback_to_primary(self, hosted_zone_id, record_name, primary_endpoint):
+        """Restore traffic to primary region"""
+        self.logger.info(f"🔄 Failing back to primary region {self.primary}")
+        return self.failover_to_dr(hosted_zone_id, record_name, primary_endpoint)

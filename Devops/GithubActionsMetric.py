@@ -69,3 +69,19 @@ class GHAMetrics:
         elif recent_success < older_success - 0.1:
             return 'declining'
         return 'stable'
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='GitHub Actions Metrics')
+    parser.add_argument('--repo', required=True, help='Owner/repo')
+    parser.add_argument('--token', required=True, help='GitHub token')
+    parser.add_argument('--workflow', help='Workflow filename or ID')
+    parser.add_argument('--days', type=int, default=30)
+    args = parser.parse_args()
+
+    metrics = GHAMetrics(args.repo, args.token)
+    runs = metrics.get_workflow_runs(args.workflow, args.days)
+    stats = metrics.compute_metrics(runs)
+    print(f"📊 GitHub Actions Metrics for {args.repo}")
+    print(f"  Total runs (last {args.days} days): {stats.get('total_runs', 0)}")
+    print(f"  Success rate: {stats.get('success_rate', 0)}%")
+    print(f"  Avg duration: {stats.get('avg_duration_seconds', 0)} seconds")
+    print(f"  Trend: {stats.get('trend', 'unknown')}")

@@ -41,3 +41,18 @@ class GHAMetrics:
                 break
             page += 1
         return runs
+    def compute_metrics(self, runs):
+        """Compute success rate, average duration, etc."""
+        total = len(runs)
+        if total == 0:
+            return {}
+        successes = sum(1 for r in runs if r['conclusion'] == 'success')
+        failures = sum(1 for r in runs if r['conclusion'] == 'failure')
+        avg_duration = sum(r['duration'] for r in runs) / total
+        return {
+            'total_runs': total,
+            'success_rate': round(successes / total * 100, 2),
+            'failure_count': failures,
+            'avg_duration_seconds': round(avg_duration, 2),
+            'trend': self._calculate_trend(runs)
+        }

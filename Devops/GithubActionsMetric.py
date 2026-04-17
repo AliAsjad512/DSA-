@@ -56,3 +56,16 @@ class GHAMetrics:
             'avg_duration_seconds': round(avg_duration, 2),
             'trend': self._calculate_trend(runs)
         }
+    def _calculate_trend(self, runs, window=7):
+        """Calculate trend over last N runs"""
+        recent = runs[:window]
+        older = runs[window:window*2] if len(runs) >= window*2 else runs[:window//2]
+        if not older or not recent:
+            return 'insufficient_data'
+        recent_success = sum(1 for r in recent if r['conclusion'] == 'success') / len(recent)
+        older_success = sum(1 for r in older if r['conclusion'] == 'success') / len(older)
+        if recent_success > older_success + 0.1:
+            return 'improving'
+        elif recent_success < older_success - 0.1:
+            return 'declining'
+        return 'stable'

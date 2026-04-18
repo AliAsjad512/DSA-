@@ -57,3 +57,21 @@ class JenkinsJobBuilder:
         self.server.create_job(job_name, job_config)
         print(f"✅ Created pipeline job: {job_name}")
 
+def create_freestyle_job(self, job_name, build_steps):
+        """Create freestyle job with shell commands"""
+        steps_xml = ""
+        for step in build_steps:
+            steps_xml += f"""
+            <hudson.tasks.Shell>
+              <command>{step}</command>
+            </hudson.tasks.Shell>"""
+        job_config = f"""<?xml version='1.1' encoding='UTF-8'?>
+<project>
+  <builders>{steps_xml}
+  </builders>
+  <publishers/>
+  <buildWrappers/>
+</project>"""
+        self.server.create_job(job_name, job_config)
+        print(f"✅ Created freestyle job: {job_name}")
+

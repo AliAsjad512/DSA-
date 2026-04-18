@@ -75,3 +75,8 @@ def create_freestyle_job(self, job_name, build_steps):
         self.server.create_job(job_name, job_config)
         print(f"✅ Created freestyle job: {job_name}")
 
+
+def delete_job(self, job_name):
+        self.server.delete_job(job_name)
+        print(f"🗑️ Deleted job: {job_name}")
+

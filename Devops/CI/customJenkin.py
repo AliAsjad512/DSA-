@@ -79,4 +79,7 @@ def create_freestyle_job(self, job_name, build_steps):
 def delete_job(self, job_name):
         self.server.delete_job(job_name)
         print(f"🗑️ Deleted job: {job_name}")
-
+def build_job(self, job_name, parameters=None):
+        queue_id = self.server.build_job(job_name, parameters=parameters)
+        print(f"🔨 Triggered build for {job_name}, queue ID: {queue_id}")
+        return queue_id

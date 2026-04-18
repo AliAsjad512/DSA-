@@ -83,3 +83,26 @@ def build_job(self, job_name, parameters=None):
         queue_id = self.server.build_job(job_name, parameters=parameters)
         print(f"🔨 Triggered build for {job_name}, queue ID: {queue_id}")
         return queue_id
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Jenkins Job Builder')
+    parser.add_argument('--url', required=True, help='Jenkins URL')
+    parser.add_argument('--username', required=True)
+    parser.add_argument('--password', required=True)
+    parser.add_argument('--job-name', required=True)
+    parser.add_argument('--action', choices=['create-pipeline', 'create-freestyle', 'delete', 'build'], required=True)
+    parser.add_argument('--repo-url', help='Git repo URL (for pipeline)')
+    parser.add_argument('--branch', default='main')
+    parser.add_argument('--steps', nargs='+', help='Shell commands (for freestyle)')
+    args = parser.parse_args()
+
+    builder = JenkinsJobBuilder(args.url, args.username, args.password)
+    if args.action == 'create-pipeline':
+        builder.create_pipeline_job(args.job_name, args.repo_url, args.branch)
+    elif args.action == 'create-freestyle':
+        builder.create_freestyle_job(args.job_name, args.steps or [])
+    elif args.action == 'delete':
+        builder.delete_job(args.job_name)
+    elif args.action == 'build':
+        builder.build_job(args.job_name)
+
